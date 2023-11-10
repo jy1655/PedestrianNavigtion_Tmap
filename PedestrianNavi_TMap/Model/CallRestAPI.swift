@@ -98,4 +98,29 @@ extension Dictionary {
 //    }
 //}
 
+//routeRequest.fetchRoute { result in
+//    switch result {
+//    case .success(let data):
+//        // 성공적으로 데이터를 받았을 때 처리
+//        do {
+//            // JSON 데이터를 딕셔너리로 변환
+//            if let jsonObject = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
+//                // JSON 데이터를 이쁘게 출력하기 위해 JSONSerialization을 사용
+//                let prettyJsonData = try JSONSerialization.data(withJSONObject: jsonObject, options: .prettyPrinted)
+//                // 이쁘게 만든 JSON 데이터를 문자열로 변환
+//                if let prettyPrintedString = String(data: prettyJsonData, encoding: .utf8) {
+//                    // 이쁘게 만든 문자열을 콘솔에 출력
+//                    print(prettyPrintedString)
+//                }
+//            }
+//        } catch {
+//            print("JSON 파싱 에러: \(error)")
+//        }
+//    case .failure(let error):
+//        // 오류가 발생했을 때 처리
+//        print(error.localizedDescription)
+//    }
+//}
+
+
 
