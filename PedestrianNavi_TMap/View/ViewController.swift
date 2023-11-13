@@ -9,6 +9,7 @@ import UIKit
 import TMapSDK
 import CoreLocation
 import SideMenu
+import MapKit
 
 
 class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLocationManagerDelegate {
@@ -25,14 +26,15 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
     var markers:Array<TMapMarker> = [] // 마커를 관리하기 위한 배열
     var polylines:Array<TMapPolyline> = [] // 폴리라인을 관리하기 위한배열
     let addressTextField = UITextField()
+    var searchButton = UIButton()
+    var menuButton = UIButton()
+    var routeButton = UIButton()
     var routeButtonBottomConstraint: NSLayoutConstraint? // 하단부 버튼이 키보드에 가리지 않도록 조정하기 위함
     var menu: SideMenuNavigationController?
-    //    let logLabel: UILabel!
     var isTableViewVisible = false
     let imuCheck = IMUCheck()
-//    var tableView: UITableView!
-//    var menuItems: Array<LeftMenuData>? // 좌측 메뉴 관리용
     var menuTableViewController: MenuTableViewController?
+    let userLocation: MKMapView? = nil // 사용자 위치표시용
 
 
 
@@ -44,22 +46,13 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
         imuCheck.startMotionUpdates()
 
         setupSideMenu()
+
     }
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         locationCheck(on: self)
-
-        // 위치 관리자 설정
-        locationManager = CLLocationManager()
-        locationManager.delegate = self
-        locationManager.desiredAccuracy = kCLLocationAccuracyBestForNavigation // 최상의 정확도
-        locationManager.distanceFilter = 30 // 30미터마다 위치업데이트를 받음
-        //        locationManager.distanceFilter = kCLDistanceFilterNone // 미세한 움직임에 대한 피드백도 받음
-
-        locationManager.requestWhenInUseAuthorization() // 위치 서비스 권한 요청
-        locationManager.requestAlwaysAuthorization() // 언제나?
-        locationManager.startUpdatingLocation() // 위치 업데이트 시작
+        userLocation?.showsUserLocation = true // 사용자의 위치정보를 파란색 점으로 표시
     }
 
     override func didReceiveMemoryWarning() {
@@ -71,6 +64,7 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
     }
 
     @objc func requestRoute() {
+        userLocation?.showsUserLocation = true // 사용자의 위치정보를 파란색 점으로 표시
 
         clearMarkers()
         clearPolylines()
@@ -145,13 +139,14 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
                     polyline.map = self.mapView
                     self.mapView.fitMapBoundsWithPolylines([polyline])
                     self.polylines.append(polyline)
-                    //                        self.mapView?.fitMapBoundsWithPolylines(self.polylines)
                 }
             }
         }
     }
 
     @objc func searchLocation() {
+        userLocation?.showsUserLocation = true // 사용자의 위치정보를 파란색 점으로 표시
+
         clearMarkers()
         clearPolylines()
 
@@ -192,8 +187,6 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
         // mapView를 self.view에 추가합니다.
         self.view.addSubview(mapView)
 
-        mapView.trackingMode = .followWithCourse // 트래킹 모드 활성화
-
         // 오토레이아웃을 사용하여 mapView의 제약 조건을 설정합니다.
         mapView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -203,6 +196,8 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
             // 하단을 비우기 위해 'mapView'의 하단을 뷰의 중간에 맞춥니다.
             mapView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor)
         ])
+
+        mapView.trackingMode = .follow// 트래킹 모드 활성화
     }
 
     func setUpUI() {
@@ -217,13 +212,13 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
         view.addSubview(addressTextField)
 
         // 검색 버튼 설정
-        let searchButton = setButton(title: "검색", selector: #selector(searchLocation))
+        searchButton = setButton(title: "검색", selector: #selector(searchLocation))
 
         //        // 메뉴 버튼 설정
-        let menuButton = setButton(title: "Menu", selector: #selector(presentSideMenu))
+        menuButton = setButton(title: "Menu", selector: #selector(presentSideMenu))
 
         // 경로 탐색 버튼 설정
-        let routeButton = setButton(title: "경로 탐색", selector: #selector(requestRoute))
+        routeButton = setButton(title: "경로 탐색", selector: #selector(requestRoute))
         //        view.addSubview(routeButton)
 
         // 오토 레이아웃 설정
@@ -262,26 +257,16 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
     }
 
     func setupSideMenu() {
-        // 메뉴 뷰 컨트롤러 인스턴스화
-//        let menuTableViewController = MenuTableViewController() // 여기서 UITableViewController는 메뉴 항목을 나열할 커스텀 테이블 뷰 컨트롤러입니다.
-//        // SideMenuNavigationController 생성
-//        menuTableViewController.ViewController = self  // 참조 전달
-//
-//        menu = SideMenuNavigationController(rootViewController: menuTableViewController)
-//        // 메뉴가 나타날 방향 설정
-//        SideMenuManager.default.leftMenuNavigationController = menu
-//        // 메뉴를 나타나게 하는 제스처 활성화
-//        SideMenuManager.default.addPanGestureToPresent(toView: self.view)
 
         let menuTableVC = MenuTableViewController()
         self.menuTableViewController = menuTableVC
         initTableViewData()
 
         menu = SideMenuNavigationController(rootViewController: menuTableViewController!)
-//        menu = SideMenuNavigationController(rootViewController: menuTableViewController)
-                // 메뉴가 나타날 방향 설정
+        //        menu = SideMenuNavigationController(rootViewController: menuTableViewController)
+        // 메뉴가 나타날 방향 설정
         SideMenuManager.default.leftMenuNavigationController = menu
-                // 메뉴를 나타나게 하는 제스처 활성화
+        // 메뉴를 나타나게 하는 제스처 활성화
         SideMenuManager.default.addPanGestureToPresent(toView: self.view)
     }
 
@@ -309,11 +294,21 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
 
         print("location check")
 
-        let locationManager = CLLocationManager()
+        locationManager = CLLocationManager()
+
+        locationManager.delegate = self
+        locationManager.desiredAccuracy = kCLLocationAccuracyBestForNavigation // 최상의 정확도
+        locationManager.distanceFilter = 30 // 30미터마다 위치업데이트를 받음
+        //        locationManager.distanceFilter = kCLDistanceFilterNone // 미세한 움직임에 대한 피드백도 받음
+
+        locationManager.requestWhenInUseAuthorization() // 위치 서비스 권한 요청
+        locationManager.requestAlwaysAuthorization() // 언제나?
+        locationManager.startUpdatingLocation() // 위치 업데이트 시작
+
 
         let status = locationManager.authorizationStatus
 
-        let logOkAction = UIAlertAction(title: "네", style: UIAlertAction.Style.default){
+        let logOkAction = UIAlertAction(title: "네", style: UIAlertAction.Style.default) {
             (action: UIAlertAction) in
             if #available(iOS 10.0, *) {
                 UIApplication.shared.open(NSURL(string:UIApplication.openSettingsURLString)! as URL)
@@ -321,9 +316,13 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
                 UIApplication.shared.openURL(NSURL(string: UIApplication.openSettingsURLString)! as URL)
             }
         }
-        let logNoAction = UIAlertAction(title: "아니오", style: UIAlertAction.Style.destructive){
+        let logNoAction = UIAlertAction(title: "아니오", style: UIAlertAction.Style.destructive) {
             (action: UIAlertAction) in
             exit(0)
+        }
+
+        if status == .denied || status == .restricted {
+            setAlert(title: "권한 필요", message: "위치 서비스 권한이 필요합니다", actions: [logOkAction, logNoAction], on: self)
         }
     }
 
@@ -334,6 +333,8 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
 
             currentLocation = CLLocationCoordinate2D(latitude: latitude, longitude: longitude) // CLLocationCoordinate2D로 변환
 
+            mapView.animateTo(location: currentLocation) // 현재 위치로 지도의 위치를 옮긴다.
+
             print("Current coordinates: \(String(describing: currentLocation))") // 여기서 coordinate를 사용할 수 있습니다.
         }
     }
@@ -343,12 +344,27 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
         print("Error getting location: \(error.localizedDescription)")
     }
 
-    func mapView(_ mapView: TMapView, tapOnMap position: CLLocationCoordinate2D) { // 탭부분만 콜백이 안됨
-        print("지도 탭")
-        let lat: Double = position.latitude
-        let lon: Double = position.longitude
-        print("lat:\(lat) \n lon:\(lon)")
+    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) { // 위치정보 권한 설정이 변경될 때마다 콜백
+        print("위치권한 설정 변경")
+        switch status {
+        case .authorizedWhenInUse, .authorizedAlways:
+            // 권한이 승인되었을때
+            print("권한 설정 완료")
+            userLocation?.showsUserLocation = true // 사용자의 위치정보를 파란색 점으로 표시
+        case .notDetermined:
+            print("권한 결정 안함")
+        case .restricted:
+            print("권한 제한")
+        case .denied:
+            print("권한 거부")
+        @unknown default:
+            print("알 수 없는 권한")
+        }
+    }
 
+
+    func mapView(_ mapView: TMapView, singleTapOnMap location: CLLocationCoordinate2D) {
+        print("싱글탭")
     }
 
     func mapView(_ mapView: TMapView, longTapOnMap position: CLLocationCoordinate2D) {
@@ -377,8 +393,14 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
     func mapView(_ mapView: TMapView, tapOnMarker marker: TMapMarker) {
         print("마커 탭")
         selectLocation = marker.position
-        print("selectLocation latitude: \(String(describing: selectLocation?.latitude)), longitude:  \(String(describing: selectLocation?.longitude))")
+        print("selectLocation latitude: \(String(describing: selectLocation?.latitude)), longitude: \(String(describing: selectLocation?.longitude))")
     }
+
+//    func mapView(_ mapView: TMapView, shouldChangeFrom oldPosition: CLLocationCoordinate2D, to newPosition: CLLocationCoordinate2D) -> Bool {
+//        let oldPosition = CLLocationCoordinate2D(latitude: 37.403049, longitude: 127.103318)
+//        var newPosition = currentLocation
+//        return true
+//    }
 
     func setMarker(position: CLLocationCoordinate2D) { // 마커 생성시 리버스지오코딩으로 주소 가져오기
         pathData.reverseGeocoding(position, addressType: "A02") {(result, error) in
@@ -475,7 +497,7 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
 
         // 기본 기능
         menuTableVC.menuItems.append(LeftMenuData(title: "화면이동", onClick: {[weak self] in self?.basicFunc001()}))
-        menuTableVC.menuItems.append(LeftMenuData(title: "지도 캡쳐", onClick: {[weak self] in self?.onClickCapture()}))
+        menuTableVC.menuItems.append(LeftMenuData(title: "대중교통 경로", onClick: {[weak self] in self?.transit()}))
 
 
         // api
@@ -516,10 +538,31 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
 extension ViewController {
     //맵 초기화
         public func initMapView(){
-//            mapView.removeFromSuperview()
-//            mapView.delegate = nil
-//            mapView = nil
-//            setupMapView()
+            mapView.removeFromSuperview() // 지도 삭제
+            addressTextField.removeFromSuperview() // 입력창 삭제
+            searchButton.removeFromSuperview() // 검색 버튼 삭제
+            menuButton.removeFromSuperview() // 메뉴 버튼 삭제
+            routeButton.removeFromSuperview() // 경로탐색 버튼 삭제
+            print("지도 삭제")
+            mapView.delegate = nil
+
+            mapView.delegate = self
+
+            // mapView를 self.view에 추가합니다.
+            self.view.addSubview(mapView) // 지도 다시 추가
+
+            // 오토레이아웃을 사용하여 mapView의 제약 조건을 설정합니다.
+            mapView.translatesAutoresizingMaskIntoConstraints = false
+            NSLayoutConstraint.activate([
+                mapView.topAnchor.constraint(equalTo: self.view.topAnchor),
+                mapView.leftAnchor.constraint(equalTo: self.view.leftAnchor),
+                mapView.rightAnchor.constraint(equalTo: self.view.rightAnchor),
+                mapView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor)
+            ])
+
+
+            setUpUI() // 지도 위에 다시 UI 생성
+            dismissSideMenu()
         }
 
     //화면이동
@@ -670,18 +713,64 @@ extension ViewController {
 
     // 대중교통1
     public func objFunc71() {
-        //        if self.mapView.isPublicTrasit {
-        //            for marker in self.ptMarkers {
-        //                marker.map = nil
-        //            }
-        //            self.ptMarkers.removeAll()
-        //            self.ptCircle?.map = nil
-        //        }
-        //        self.isPublicTrasit = !self.isPublicTrasit
+//                if self.mapView.isPublicTrasit {
+//                    for marker in self.ptMarkers {
+//                        marker.map = nil
+//                    }
+//                    self.ptMarkers.removeAll()
+//                    self.ptCircle?.map = nil
+//                }
+//                self.isPublicTrasit = !self.isPublicTrasit
     }
 
-    public func onClickCapture() {
-//        self.mapView?.captureMapView()
+    public func transit() {
+        clearMarkers()
+        clearPolylines()
+
+        addressTextField.resignFirstResponder() // 키보드가 보이는 경우 숨깁니다
+
+        mapView.trackingMode = .follow // 트래킹 모드 활성화
+
+        let startPoint = currentLocation!
+
+        let endPoint = selectLocation ?? CLLocationCoordinate2D(latitude: 37.403049, longitude: 127.103318)
+
+        let routeRequest = CallRestAPI(
+            startX: String(describing: startPoint.longitude),
+            startY: String(describing: startPoint.latitude),
+            endX: String(describing: endPoint.longitude),
+            endY: String(describing: endPoint.latitude)
+
+        )
+
+        routeRequest.transitRoute { result in
+            switch result {
+            case .success(let data):
+                // 성공적으로 데이터를 받았을 때 처리
+                do {
+                    // JSON 데이터를 딕셔너리로 변환
+                    if let jsonObject = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
+                        // JSON 데이터를 이쁘게 출력하기 위해 JSONSerialization을 사용
+                        let prettyJsonData = try JSONSerialization.data(withJSONObject: jsonObject, options: .prettyPrinted)
+                        // 이쁘게 만든 JSON 데이터를 문자열로 변환
+                        if let prettyPrintedString = String(data: prettyJsonData, encoding: .utf8) {
+                            // 이쁘게 만든 문자열을 콘솔에 출력
+                            print(prettyPrintedString)
+                        }
+                    }
+                } catch {
+                    print("JSON 파싱 에러: \(error)")
+                }
+            case .failure(let error):
+                // 오류가 발생했을 때 처리
+                print(error.localizedDescription)
+            }
+        }
+
+        path.append(startPoint)
+        path.append(endPoint)
+
+        _ = TMapPolyline(coordinates: path)
     }
 }
 
