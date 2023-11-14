@@ -12,7 +12,7 @@ import SideMenu
 import MapKit
 
 
-class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLocationManagerDelegate {
+class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLocationManagerDelegate, ModalDelegate {
 
     let callAppkey = CallAppKey()
     let pathData = TMapPathData() // 경로 탐색을 위한 지정
@@ -35,6 +35,8 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
     let imuCheck = IMUCheck()
     var menuTableViewController: MenuTableViewController?
     let userLocation: MKMapView? = nil // 사용자 위치표시용
+    var modalData: [Any] = []
+    var modalLineData: [Any] = []
 
 
 
@@ -43,7 +45,7 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
 
         setupMapView()
         setUpUI()
-        imuCheck.startMotionUpdates()
+//        imuCheck.startMotionUpdates()
 
         setupSideMenu()
 
@@ -71,7 +73,7 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
 
         addressTextField.resignFirstResponder() // 키보드가 보이는 경우 숨깁니다
 
-        mapView.trackingMode = .follow // 트래킹 모드 활성화
+        mapView.trackingMode = .followWithHeading // 트래킹 모드 활성화
 
         let startPoint = currentLocation!
 
@@ -144,31 +146,40 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
         }
     }
 
-    @objc func searchLocation() {
-        userLocation?.showsUserLocation = true // 사용자의 위치정보를 파란색 점으로 표시
+    @objc func searchLocationModal() {
+//        userLocation?.showsUserLocation = true // 사용자의 위치정보를 파란색 점으로 표시
+//
+//        clearMarkers()
+//        clearPolylines()
+//
+//        guard let address = addressTextField.text, !address.isEmpty else {
+//            print("Address is empty")
+//            return
+//        }
+//
+//        print("address: \(address)")
+//
+//        pathData.requestFindAllPOI(address, count: 30) { (results, error) in
+//            guard error == nil else {
+//                print("Error finding POIs: \(error!.localizedDescription)")
+//                return
+//            }
+//
+//            if let results = results {
+//                for result in results {
+//                    self.setMarker(position: result.coordinate!)
+//                }
+//            }
+//        }
 
-        clearMarkers()
-        clearPolylines()
-
-        guard let address = addressTextField.text, !address.isEmpty else {
-            print("Address is empty")
-            return
+        let modalView = SearchView()
+        modalView.delegate = self // 자신을 delegate로 지정
+        modalView.data = modalData // 이전데이터 전달
+        modalView.onDataUpdate = { [weak self] updatedData in
+            self?.modalLineData = updatedData // 업데이트된 데이터 저장
         }
+        present(modalView, animated: true)
 
-        print("address: \(address)")
-
-        pathData.requestFindAllPOI(address, count: 30) { (results, error) in
-            guard error == nil else {
-                print("Error finding POIs: \(error!.localizedDescription)")
-                return
-            }
-
-            if let results = results {
-                for result in results {
-                    self.setMarker(position: result.coordinate!)
-                }
-            }
-        }
     }
 
     func setupMapView() {
@@ -212,7 +223,7 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
         view.addSubview(addressTextField)
 
         // 검색 버튼 설정
-        searchButton = setButton(title: "검색", selector: #selector(searchLocation))
+        searchButton = setButton(title: "검색", selector: #selector(searchLocationModal))
 
         //        // 메뉴 버튼 설정
         menuButton = setButton(title: "Menu", selector: #selector(presentSideMenu))
@@ -270,6 +281,14 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
         SideMenuManager.default.addPanGestureToPresent(toView: self.view)
     }
 
+    func modalViewDidDisappear() {
+        print(modalData)
+        print(modalLineData)
+    }
+
+    func takeData(data: [Any]) {
+        modalData = data
+    }
 
     func detectStatus() {
 
@@ -419,6 +438,7 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
         }
     }
 
+
     func clearMarkers() { // 마커 지우기
         print("마커 지우기")
         for marker in markers {
@@ -497,7 +517,7 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
 
         // 기본 기능
         menuTableVC.menuItems.append(LeftMenuData(title: "화면이동", onClick: {[weak self] in self?.basicFunc001()}))
-        menuTableVC.menuItems.append(LeftMenuData(title: "대중교통 경로", onClick: {[weak self] in self?.transit()}))
+        menuTableVC.menuItems.append(LeftMenuData(title: "대중교통 경로", onClick: {[weak self] in self?.transit(startPoint: self!.currentLocation!, endPoint: self?.selectLocation!)}))
 
 
         // api
@@ -723,7 +743,7 @@ extension ViewController {
 //                self.isPublicTrasit = !self.isPublicTrasit
     }
 
-    public func transit() {
+    public func transit(startPoint: CLLocationCoordinate2D, endPoint: CLLocationCoordinate2D?) {
         clearMarkers()
         clearPolylines()
 
@@ -731,15 +751,15 @@ extension ViewController {
 
         mapView.trackingMode = .follow // 트래킹 모드 활성화
 
-        let startPoint = currentLocation!
+//        startPoint = currentLocation!
 
-        let endPoint = selectLocation ?? CLLocationCoordinate2D(latitude: 37.403049, longitude: 127.103318)
+//        endPoint = selectLocation ?? CLLocationCoordinate2D(latitude: 37.403049, longitude: 127.103318)
 
         let routeRequest = CallRestAPI(
             startX: String(describing: startPoint.longitude),
             startY: String(describing: startPoint.latitude),
-            endX: String(describing: endPoint.longitude),
-            endY: String(describing: endPoint.latitude)
+            endX: String(describing: endPoint?.longitude ?? 127.103318),
+            endY: String(describing: endPoint?.latitude ?? 37.403049)
 
         )
 
@@ -768,9 +788,15 @@ extension ViewController {
         }
 
         path.append(startPoint)
-        path.append(endPoint)
+        path.append(endPoint ?? CLLocationCoordinate2D(latitude: 37.403049, longitude: 127.103318))
 
         _ = TMapPolyline(coordinates: path)
     }
+}
+
+protocol ModalDelegate: AnyObject { // 모달창에서 메소드를 공유하기 위한 Delegate
+    func transit(startPoint: CLLocationCoordinate2D, endPoint: CLLocationCoordinate2D?)
+    func modalViewDidDisappear()
+    func takeData(data: [Any])
 }
 
