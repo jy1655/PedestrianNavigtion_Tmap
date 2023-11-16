@@ -38,7 +38,6 @@ class MenuTableViewController: UITableViewController {
         tableView.deselectRow(at: indexPath, animated: true) // 선택된 행의 하이라이트를 제거
         let menuItem = menuItems[indexPath.row] 
             menuItem.onClick() // 클로저 실행
-
     }
 
     

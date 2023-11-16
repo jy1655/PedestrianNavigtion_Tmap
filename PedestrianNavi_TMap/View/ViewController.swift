@@ -35,8 +35,8 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
     let imuCheck = IMUCheck()
     var menuTableViewController: MenuTableViewController?
     let userLocation: MKMapView? = nil // 사용자 위치표시용
-    var modalData: [Any] = []
-    var modalLineData: [Any] = []
+    var modalData = [Route]()
+    var modalLineData: Route?
 
 
 
@@ -174,7 +174,7 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
 
         let modalView = SearchView()
         modalView.delegate = self // 자신을 delegate로 지정
-        modalView.data = modalData // 이전데이터 전달
+        modalView.routes = modalData // 이전데이터 전달
         modalView.onDataUpdate = { [weak self] updatedData in
             self?.modalLineData = updatedData // 업데이트된 데이터 저장
         }
@@ -223,14 +223,16 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
         view.addSubview(addressTextField)
 
         // 검색 버튼 설정
-        searchButton = setButton(title: "검색", selector: #selector(searchLocationModal))
+        searchButton = MakingUI.setButton(title: "검색", selector: #selector(searchLocationModal))
+        self.view.addSubview(searchButton)
 
         //        // 메뉴 버튼 설정
-        menuButton = setButton(title: "Menu", selector: #selector(presentSideMenu))
-
+        menuButton = MakingUI.setButton(title: "Menu", selector: #selector(presentSideMenu))
+        self.view.addSubview(menuButton)
         // 경로 탐색 버튼 설정
-        routeButton = setButton(title: "경로 탐색", selector: #selector(requestRoute))
-        //        view.addSubview(routeButton)
+        routeButton = MakingUI.setButton(title: "경로 탐색", selector: #selector(requestRoute))
+        view.addSubview(routeButton)
+//        self.view.addSubview(routeButton)
 
         // 오토 레이아웃 설정
         addressTextField.translatesAutoresizingMaskIntoConstraints = false
@@ -263,8 +265,13 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
         routeButtonBottomConstraint?.isActive = true
 
         // 키보드 알림 등록
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
+        registerForKeyboardNotifications { [weak self] (keyboardHeight, isKeyboardShowing) in
+            self?.routeButtonBottomConstraint?.constant = isKeyboardShowing ? -keyboardHeight - 20 : -20
+            UIView.animate(withDuration: 0.3) {
+                self?.view.layoutIfNeeded()
+            }
+        }
+        hideKeyboardWhenTappedAround() // 키보드 내려가는 탭제스쳐 인식기
     }
 
     func setupSideMenu() {
@@ -282,13 +289,86 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
     }
 
     func modalViewDidDisappear() {
-        print(modalData)
-        print(modalLineData)
+        print("전송받은 전체 데이터: \(modalData)")
+        print("경로를 표시해야할 데이터: \(String(describing: modalLineData))")
+
+        if modalLineData != nil {
+            clearMarkers()
+            clearPolylines()
+
+            let startPointLat = modalLineData?.itinerary.legs.first?.start.lat
+            let startPointLon = modalLineData?.itinerary.legs.first?.start.lon
+            let endPointLat = modalLineData?.itinerary.legs.last?.end.lat
+            let endPointLon = modalLineData?.itinerary.legs.last?.end.lon
+
+            setMarker(position: CLLocationCoordinate2D(latitude: startPointLat!, longitude: startPointLon!))
+            setMarker(position: CLLocationCoordinate2D(latitude: endPointLat!, longitude: endPointLon!))
+
+            polylines = createPolylines(from: modalLineData!) // TMapView에 polyline들을 추가
+
+            transitMarker() // 대중교통 타고 내리는 위치에 마크 추가
+
+            for polyline in polylines {
+                polyline.map = self.mapView
+                self.polylines.append(polyline)
+            }
+        }// 선택했던 경로를 지도에 표시(polyline)
+    } // 모달창이 경로를 선택하면서 닫힐떄 호출되는 메소드
+
+    func takeData(data: [Route]) {
+        modalData = data
+    } // 모달에서 검색한 대중교통경로 정보(10개치) 저장
+
+    func createPolylines(from route: Route) -> [TMapPolyline] {
+        var previousStepEndCoordinate: CLLocationCoordinate2D?
+
+        for leg in route.itinerary.legs {
+
+            if leg.passShape != nil {
+
+                let transitcoordinates = MakingUI.createCoordinates(from: leg.passShape!.linestring) // 좌표들 생성
+
+                if let endCoordinate = previousStepEndCoordinate, let startCoordinate = transitcoordinates.first {
+                    let bridgeCoordinates = [endCoordinate, startCoordinate]
+                    let bridgePolyline = TMapPolyline(coordinates: bridgeCoordinates)
+                    bridgePolyline.strokeColor = MakingUI.colorWithHexString(hexString: leg.routeColor ?? "000000") // 환승 지역 이동은 검은색으로 표현
+                    bridgePolyline.lineStyle = .dot
+                    polylines.append(bridgePolyline)
+                } // 이전에 생성된 좌표가 존재했을 경우 이어주는 메소드
+
+                let transitpolyline = TMapPolyline(coordinates: transitcoordinates)
+                transitpolyline.strokeColor = MakingUI.colorWithHexString(hexString: leg.routeColor ?? "000000") // routeColor에 맞게 경로 색 설정
+                if !(leg.routeColor != nil) {
+                    transitpolyline.lineStyle = .dash
+                } // 환승지역으로 걸어가는 거리가 있기도 함
+                polylines.append(transitpolyline)
+                previousStepEndCoordinate = transitcoordinates.last
+            }
+
+            guard let steps = leg.steps else { continue }
+
+            for step in steps {
+                let coordinates = MakingUI.createCoordinates(from: step.linestring)
+
+                if let endCoordinate = previousStepEndCoordinate, let startCoordinate = coordinates.first {
+                    let stepCoordinates = [endCoordinate, startCoordinate]
+                    let stepPolyline = TMapPolyline(coordinates: stepCoordinates)
+                    stepPolyline.strokeColor = MakingUI.colorWithHexString(hexString: "000000") // 도보 이동은 검은색으로 표현
+                    stepPolyline.lineStyle = .dot
+                    polylines.append(stepPolyline)
+                } // 이전에 생성된 좌표가 존재했을 경우 이어주는 메소드
+
+                let polyline = TMapPolyline(coordinates: coordinates)
+                polyline.strokeColor = MakingUI.colorWithHexString(hexString: "000000") // 도보 이동은 검은색으로 표현
+                polyline.lineStyle = .dot
+                polylines.append(polyline)
+                previousStepEndCoordinate = coordinates.last
+            }
+        }
+        print("폴리라인들: \(polylines)")
+        return polylines
     }
 
-    func takeData(data: [Any]) {
-        modalData = data
-    }
 
     func detectStatus() {
 
@@ -296,7 +376,7 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
 
         if gpsStatus == "NO_SIGNAL" {
             print("GPS 신호 없음")
-            setAlert(title: "GPS 오류!", message: "GPS 신호가 없습니다!", actions: [action1], on: self)
+            MakingUI.setAlert(title: "GPS 오류!", message: "GPS 신호가 없습니다!", actions: [action1], on: self)
         } else if gpsStatus == "BAD" {
             print("GPS 신호가 약합니다")
         } else if gpsStatus == "TUNNEL" {
@@ -306,7 +386,6 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
         } else {
             print("상태양호")
         }
-
     }
 
     func locationCheck(on viewController: UIViewController) {
@@ -341,7 +420,7 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
         }
 
         if status == .denied || status == .restricted {
-            setAlert(title: "권한 필요", message: "위치 서비스 권한이 필요합니다", actions: [logOkAction, logNoAction], on: self)
+            MakingUI.setAlert(title: "권한 필요", message: "위치 서비스 권한이 필요합니다", actions: [logOkAction, logNoAction], on: self)
         }
     }
 
@@ -355,6 +434,8 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
             mapView.animateTo(location: currentLocation) // 현재 위치로 지도의 위치를 옮긴다.
 
             print("Current coordinates: \(String(describing: currentLocation))") // 여기서 coordinate를 사용할 수 있습니다.
+            
+            
         }
     }
 
@@ -384,6 +465,7 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
 
     func mapView(_ mapView: TMapView, singleTapOnMap location: CLLocationCoordinate2D) {
         print("싱글탭")
+        view.endEditing(true) // 키보드가 올라와 있었다면 내린다.
     }
 
     func mapView(_ mapView: TMapView, longTapOnMap position: CLLocationCoordinate2D) {
@@ -438,6 +520,56 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
         }
     }
 
+    func transitMarker() { // 대중교통 이용시 승차, 환승, 하차지역 정보 마커표시 메소드
+        if modalLineData?.itinerary != nil {
+            let legs = modalLineData!.itinerary.legs
+            for leg in legs {
+                if leg.passStopList != nil {
+                    let latStart: String = (leg.passStopList?.stationList.first!.lat)!
+                    let lonStart: String = (leg.passStopList?.stationList.first!.lon)!
+                    let latEnd: String = (leg.passStopList?.stationList.last!.lat)!
+                    let lonEnd: String = (leg.passStopList?.stationList.last!.lon)!
+
+                    let latStartValue = Double(latStart)
+                    let lonStartValue = Double(lonStart)
+                    let latEndValue = Double(latEnd)
+                    let lonEndValue = Double(lonEnd)
+
+                    let startPosition: CLLocationCoordinate2D = CLLocationCoordinate2D(latitude: latStartValue!, longitude: lonStartValue!)
+                    let endPostion = CLLocationCoordinate2D(latitude: latEndValue!, longitude: lonEndValue!)
+
+                    DispatchQueue.main.async {
+                        let startMarker = TMapMarker(position: startPosition) // 승차지역
+                        let endMarker = TMapMarker(position: endPostion) // 하차지역
+                        startMarker.map = self.mapView
+                        endMarker.map = self.mapView
+                        startMarker.draggable = true
+                        endMarker.draggable = false
+                        startMarker.title = leg.mode ?? "알수없는 교통수단" // 교통수단 :버스 지하철등
+                        endMarker.title = "\((leg.passStopList?.stationList.last?.stationName)!) 하차" // 하차 역 정보
+
+                        switch leg.Lane {
+                        case nil:
+                            startMarker.subTitle = leg.route // 노선정보 간선641등
+                        case let lane? where lane.endIndex == 1: // 요소가 하나만 있을때
+                            startMarker.subTitle = leg.route
+                        case let lane? where lane.endIndex == 2: // 요소가 두개만 있을때
+                            startMarker.subTitle = "\(leg.Lane!.first!.route), \(leg.Lane!.last!.route)"
+                        default:
+                            if let lane = leg.Lane {
+                                startMarker.subTitle = "\(lane.first!.route), \(lane.last!.route)외 \(lane.endIndex-2)노선"
+                            }
+                        }
+
+                        endMarker.subTitle = "\((leg.passStopList?.stationList.last?.index)!+1) 정거장" // 지나야 하는 정류장 수
+
+                        self.markers.append(startMarker)
+                        self.markers.append(endMarker)
+                    }
+                }
+            }
+        }
+    }
 
     func clearMarkers() { // 마커 지우기
         print("마커 지우기")
@@ -455,47 +587,12 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
         self.polylines.removeAll()
     }
 
-    func setButton(title: String, selector: Selector) -> UIButton { // 버튼 만들기
-        // iOS 14 미만에서 사용하는 기존의 UIButton 초기화 방식
-        let button = UIButton()
-        button.setTitle(title, for: .normal)
-        button.addTarget(self, action: selector, for: .touchUpInside) // selector로 버튼 클릭시 구현될 메소드 작성
-        button.backgroundColor = UIColor.systemBlue
-        button.layer.cornerRadius = 5
-        button.clipsToBounds = true
-
-        self.view.addSubview(button)
-
-        return button
-    }
-
     func SKTMapApikeySucceed() { // TMapTapiDelegate를 통해 callback을 받음.
         print("APIKEY 인증 성공")
     }
 
     func SKTMapApikeyFailed(error: NSError?) {
         print("APIKEY 인증 실패")
-    }
-
-
-    @objc func keyboardWillShow(notification: NSNotification) {
-        if let keyboardFrame: NSValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
-            let keyboardRectangle = keyboardFrame.cgRectValue
-            let keyboardHeight = keyboardRectangle.height
-            // 경로 버튼의 하단 제약을 업데이트합니다
-            routeButtonBottomConstraint?.constant = -keyboardHeight - 20 // 필요에 따라 값을 조정
-            UIView.animate(withDuration: 0.3) {
-                self.view.layoutIfNeeded()
-            }
-        }
-    }
-
-    @objc func keyboardWillHide(notification: NSNotification) {
-        // 경로 버튼의 하단 제약을 초기 상수 값으로 리셋합니다
-        routeButtonBottomConstraint?.constant = -20
-        UIView.animate(withDuration: 0.3) {
-            self.view.layoutIfNeeded()
-        }
     }
 
     @objc func presentSideMenu() {
@@ -534,22 +631,9 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
         menuTableVC.tableView.reloadData()
     }
 
-    func setAlert(title: String, message: String, actions: [UIAlertAction], on viewController: UIViewController) { // 알람기능 만들어두기
-        print("버튼생성 : \(title)")
-        let alert = UIAlertController(
-            title: title,
-            message: message,
-            preferredStyle: UIAlertController.Style.alert
-        )
-        for action in actions {
-            alert.addAction(action)
-        }
-        viewController.present(alert, animated:  true)
-    }
 
-    deinit { // 뷰 컨트롤러가 해제될 때 또는 더 이상 키보드 알림을 받을 필요가 없을 때 알림 관찰자를 제거
-        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
-        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
+    deinit {
+        unregisterForKeyboardNotifications() // 뷰 컨트롤러가 해제될 때 또는 더 이상 키보드 알림을 받을 필요가 없을 때 알림 관찰자를 제거
     }
 
 }
@@ -587,7 +671,8 @@ extension ViewController {
 
     //화면이동
     public func basicFunc001(){
-        self.mapView?.setCenter(currentLocation)
+        self.mapView?.setCenter(currentLocation) // 현재 사용자 위치를 중심으로
+        mapView.animateTo(zoom: 17) // 줌레벨 조정
         dismissSideMenu()
     }
 
@@ -731,18 +816,6 @@ extension ViewController {
         dismissSideMenu()
     }
 
-    // 대중교통1
-    public func objFunc71() {
-//                if self.mapView.isPublicTrasit {
-//                    for marker in self.ptMarkers {
-//                        marker.map = nil
-//                    }
-//                    self.ptMarkers.removeAll()
-//                    self.ptCircle?.map = nil
-//                }
-//                self.isPublicTrasit = !self.isPublicTrasit
-    }
-
     public func transit(startPoint: CLLocationCoordinate2D, endPoint: CLLocationCoordinate2D?) {
         clearMarkers()
         clearPolylines()
@@ -797,6 +870,6 @@ extension ViewController {
 protocol ModalDelegate: AnyObject { // 모달창에서 메소드를 공유하기 위한 Delegate
     func transit(startPoint: CLLocationCoordinate2D, endPoint: CLLocationCoordinate2D?)
     func modalViewDidDisappear()
-    func takeData(data: [Any])
+    func takeData(data: [Route])
 }
 

@@ -1,0 +1,351 @@
+
+Optional(
+    PedestrianNavi_TMap.Route(
+        itinerary: PedestrianNavi_TMap.Itinerary(
+            transferCount: 1,
+            pathType: 2,
+            totalWalkDistance: 629,
+            legs: [
+                PedestrianNavi_TMap.Leg(
+                    distance: 396,
+                    start: PedestrianNavi_TMap.Location(
+                        name: "출발지",
+                        lon: 126.99414870091859,
+                        lat: 37.482339254513924),
+                    end: PedestrianNavi_TMap.Location(
+                        name: "대우효령아파트",
+                        lon: 126.9942361111111,
+                        lat: 37.48026388888889),
+                    steps: Optional([
+                        PedestrianNavi_TMap.Step(
+                            linestring: "126.994156,37.482327 126.99394,37.482246 126.993645,37.48212 126.99335,37.48201 126.99326,37.48197 126.99272,37.481735",
+                            description: "143m 이동",
+                            streetName: Optional(""),
+                            distance: Optional(143)),
+                        PedestrianNavi_TMap.Step(
+                            linestring: "126.99272,37.481735 126.992744,37.48171 126.99275,37.481678 126.993,37.48129 126.99317,37.481007 126.993256,37.480877 126.99328,37.480846",
+                            description: "세영전력 에서 좌회전 후 방배중앙로 을 따라 110m 이동 ",
+                            streetName: Optional("방배중앙로"),
+                            distance: Optional(110)),
+                        PedestrianNavi_TMap.Step(
+                            linestring: "126.99362,37.480316 126.99378,37.48006",
+                            description: "솔래 에서 우측 횡단보도 후 보행자도로 을 따라 32m 이동 ",
+                            streetName: Optional("보행자도로"),
+                            distance: Optional(32)),
+                        PedestrianNavi_TMap.Step(
+                            linestring: "126.99378,37.48006 126.994255,37.48022",
+                            description: "좌회전 후 효령로 을 따라 45m 이동 ",
+                            streetName: Optional("효령로"),
+                            distance: Optional(45))
+                    ]),
+                    passStopList: nil,
+                    routeId: nil,
+                    passShape: nil,
+                    type: nil,
+                    mode: Optional("WALK"),
+                    routeColor: nil,
+                    sectionTime: Optional(319),
+                    route: nil,
+                    service: nil
+                ),
+                PedestrianNavi_TMap.Leg(
+                    distance: 3561,
+                    start: PedestrianNavi_TMap.Location(
+                        name: "대우효령아파트",
+                        lon: 126.9942361111111,
+                        lat: 37.48026388888889),
+                        end: PedestrianNavi_TMap.Location(
+                            name: "뱅뱅사거리",
+                            lon: 127.03241388888888,
+                            lat: 37.487658333333336
+                        ),
+                        steps: nil,
+                        passStopList: Optional(PedestrianNavi_TMap.PassStopList(
+                            stationList: [
+                                PedestrianNavi_TMap.StationList(
+                                    stationName: "대우효령아파트",
+                                    stationID: "751493",
+                                    lat: "37.480264",
+                                    lon: "126.994236",
+                                    index: 0
+                                ),
+                                PedestrianNavi_TMap.StationList(
+                                    stationName: "방배역.백석예술대학교",
+                                    stationID: "751558",
+                                    lat: "37.481033",
+                                    lon: "126.996719",
+                                    index: 1
+                                ),
+                                PedestrianNavi_TMap.StationList(
+                                    stationName: "신동아아파트앞",
+                                    stationID: "771901",
+                                    lat: "37.482094",
+                                    lon: "127.001883",
+                                    index: 2
+
+                                ),
+                                PedestrianNavi_TMap.StationList(
+                                    stationName: "뱅뱅사거리",
+                                    stationID: "772135",
+                                    lat: "37.488867",
+                                    lon: "127.029803",
+                                    index: 9
+                                ),
+                                PedestrianNavi_TMap.StationList(
+                                    stationName: "뱅뱅사거리",
+                                    stationID: "772093",
+                                    lat: "37.487658",
+                                    lon: "127.032414",
+                                    index: 10
+                                )
+                            ]
+                        )
+                    ),
+                    routeId: Optional("11863001"),
+                    passShape: Optional(
+                        PedestrianNavi_TMap.PassShape(
+                            linestring: "126.994222,37.480300 126.996675,37.481094 126.997442,37.481344 126.997619,37.481403 126.997792,37.481453 126.997958,37.481494 126.998186,37.481519 126.999553,37.481653 127.000000,37.481719 127.000619,37.481850 127.001864,37.482167 127.002019,37.482206 127.004417,37.482675 127.004592,37.482708 127.005414,37.482867 127.008708,37.483494 127.011425,37.484011 127.011600,37.484044 127.015442,37.484794 127.015469,37.484800 127.015647,37.484833 127.015853,37.484875 127.016264,37.484950 127.016444,37.484986 127.017553,37.485197 127.017831,37.485253 127.021008,37.486231 127.025997,37.487767 127.028206,37.488447 127.028372,37.488500 127.029808,37.488939 127.031586,37.489483 127.032458,37.487656"
+                        )
+                    ),
+                    type: Optional(11),
+                    mode: Optional("BUS"),
+                    routeColor: Optional("0068B7"),
+                    sectionTime: Optional(679),
+                    route: Optional("간선:641"),
+                    service: Optional(1)
+                ),
+                PedestrianNavi_TMap.Leg(
+                    distance: 0,
+                    start: PedestrianNavi_TMap.Location(
+                        name: "뱅뱅사거리",
+                        lon: 127.03241388888888,
+                        lat: 37.487658333333336
+                    ),
+                    end: PedestrianNavi_TMap.Location(
+                        name: "뱅뱅사거리",
+                        lon: 127.03241388888888,
+                        lat: 37.487658333333336
+                    ),
+                    steps: nil,
+                    passStopList: nil,
+                    routeId: nil,
+                    passShape: Optional(
+                        PedestrianNavi_TMap.PassShape(
+                            linestring: "127.032414,37.487658 127.032414,37.487658"
+                        )
+                    ),
+                    type: nil,
+                    mode: Optional("WALK"),
+                    routeColor: nil,
+                    sectionTime: Optional(0),
+                    route: nil,
+                    service: nil
+                ),
+                PedestrianNavi_TMap.Leg(
+                    distance: 12342,
+                    start: PedestrianNavi_TMap.Location(
+                        name: "뱅뱅사거리",
+                        lon: 127.03241388888888,
+                        lat: 37.487658333333336
+                    ),
+                    end: PedestrianNavi_TMap.Location(
+                        name: "삼평교",
+                        lon: 127.10433055555555,
+                        lat: 37.40385277777778
+                    ),
+                    steps: nil,
+                    passStopList: Optional(
+                        PedestrianNavi_TMap.PassStopList(
+                            stationList: [
+                                PedestrianNavi_TMap.StationList(
+                                    stationName: "뱅뱅사거리",
+                                    stationID: "772093",
+                                    lat: "37.487658",
+                                    lon: "127.032414", index: 0
+                                ),
+                                PedestrianNavi_TMap.StationList(
+                                    stationName: "양재역.서초문화예술회관",
+                                    stationID: "771919",
+                                    lat: "37.482644",
+                                    lon: "127.035825",
+                                    index: 1
+                                ),
+                                PedestrianNavi_TMap.StationList(
+                                    stationName: "교육개발원입구(중)",
+                                    stationID: "771802",
+                                    lat: "37.478556",
+                                    lon: "127.038542",
+                                    index: 2
+                                ),
+                                PedestrianNavi_TMap.StationList(
+                                    stationName: "매헌시민의숲.양재꽃시장",
+                                    stationID: "771593",
+                                    lat: "37.470908",
+                                    lon: "127.038447",
+                                    index: 3
+                                ),
+                                PedestrianNavi_TMap.StationList(
+                                    stationName: "염곡마을.서초50플러스센터",
+                                    stationID: "820401",
+                                    lat: "37.461603",
+                                    lon: "127.049214",
+                                    index: 4
+                                ),
+                                PedestrianNavi_TMap.StationList(
+                                    stationName: "탑성마을.서초포레스타입구(중)",
+                                    stationID: "820378",
+                                    lat: "37.457556",
+                                    lon: "127.058775",
+                                    index: 5
+                                ),
+                                PedestrianNavi_TMap.StationList(
+                                    stationName: "안골마을.서울언남초등학교",
+                                    stationID: "820403",
+                                    lat: "37.455489",
+                                    lon: "127.063508",
+                                    index: 6
+                                ),
+                                PedestrianNavi_TMap.StationList(
+                                    stationName: "서울특별시어린이병원.강동송파과학화예비군훈련장",
+                                    stationID: "771235",
+                                    lat: "37.456681",
+                                    lon: "127.070197",
+                                    index: 7
+                                ),
+                                PedestrianNavi_TMap.StationList(
+                                    stationName: "동산마을입구",
+                                    stationID: "770544",
+                                    lat: "37.422467",
+                                    lon: "127.101294",
+                                    index: 8
+                                ),
+                                PedestrianNavi_TMap.StationList(
+                                    stationName: "시흥사거리",
+                                    stationID: "770508",
+                                    lat: "37.420728",
+                                    lon: "127.101947",
+                                    index: 9
+                                ),
+                                PedestrianNavi_TMap.StationList(
+                                    stationName: "나라기록관.코이카",
+                                    stationID: "770415",
+                                    lat: "37.415400",
+                                    lon: "127.101042",
+                                    index: 10
+                                ),
+                                PedestrianNavi_TMap.StationList(
+                                    stationName: "판교제2테크노밸리",
+                                    stationID: "770298",
+                                    lat: "37.411653",
+                                    lon: "127.099361",
+                                    index: 11
+                                ),
+                                PedestrianNavi_TMap.StationList(
+                                    stationName: "삼평교",
+                                    stationID: "770107",
+                                    lat: "37.403853",
+                                    lon: "127.104331",
+                                    index: 12
+                                )
+                            ]
+                        )
+                    ),
+                    routeId: Optional("1057931001"),
+                    passShape: Optional(PedestrianNavi_TMap.PassShape(
+                        linestring: "127.032458,37.487656 127.033683,37.485086 127.033819,37.484811 127.033928,37.484633 127.034036,37.484503 127.034319,37.484181 127.034628,37.483844 127.035864,37.482667 127.037200,37.481392 127.037383,37.481169 127.037661,37.480753 127.038047,37.480053 127.038289,37.479453 127.038450,37.478947 127.038514,37.478547 127.038572,37.478197 127.038578,37.478039 127.038569,37.473883 127.038569,37.473764 127.038558,37.471422 127.038628,37.470911 127.038631,37.470881 127.038750,37.470356 127.038983,37.469789 127.039050,37.469656 127.039258,37.469292 127.039517,37.468894 127.039778,37.468564 127.042417,37.466108 127.042531,37.466003 127.042850,37.465706 127.043081,37.465492 127.043464,37.465142 127.044658,37.464050 127.045258,37.463533 127.045383,37.463444 127.045831,37.463158 127.046267,37.462925 127.046942,37.462619 127.049242,37.461631 127.058767,37.457533 127.059506,37.457217 127.059625,37.457164 127.063150,37.455650 127.063531,37.455519 127.063536,37.455517 127.064006,37.455383 127.064531,37.455319 127.064731,37.455311 127.064956,37.455306 127.065058,37.455308 127.065567,37.455364 127.066133,37.455514 127.067492,37.455944 127.070183,37.456825 127.070806,37.457028 127.071781,37.457233 127.072267,37.457319 127.072758,37.457392 127.073117,37.457422 127.073375,37.457425 127.073756,37.457394 127.074094,37.457339 127.074506,37.457233 127.074983,37.457033 127.075528,37.456750 127.076006,37.456394 127.076253,37.456167 127.076664,37.455719 127.076897,37.455425 127.077158,37.455053 127.077600,37.454039 127.077817,37.453358 127.077956,37.452722 127.078006,37.452344 127.078031,37.451944 127.078028,37.451536 127.078000,37.451156 127.077875,37.450419 127.077750,37.449989 127.077619,37.449619 127.076597,37.446817 127.076258,37.445869 127.076075,37.445314 127.075858,37.444086 127.075700,37.442825 127.075719,37.440936 127.076053,37.439347 127.076581,37.437981 127.076628,37.437789 127.076892,37.437125 127.077131,37.436664 127.078136,37.435153 127.078831,37.434342 127.079253,37.433897 127.079800,37.433364 127.080703,37.432578 127.080997,37.432383 127.081339,37.432117 127.081694,37.431881 127.082819,37.431183 127.084192,37.430506 127.085097,37.430106 127.086242,37.429547 127.087694,37.428917 127.090356,37.427797 127.094294,37.426064 127.097575,37.424556 127.098733,37.424092 127.100011,37.423456 127.100981,37.422803 127.101319,37.422539 127.101367,37.422500 127.101925,37.421789 127.101931,37.421486 127.102019,37.420769 127.102064,37.420428 127.102275,37.419622 127.102306,37.419233 127.102297,37.418994 127.102264,37.418733 127.102117,37.418064 127.101903,37.417433 127.101614,37.416667 127.101408,37.416092 127.101125,37.415383 127.101114,37.415356 127.100483,37.414058 127.099844,37.412664 127.099714,37.412267 127.099694,37.412189 127.099544,37.411833 127.099494,37.411669 127.099439,37.411475 127.099392,37.411056 127.099381,37.410592 127.099394,37.410319 127.099503,37.409750 127.099614,37.409378 127.100256,37.407497 127.100419,37.407117 127.100664,37.406786 127.100908,37.406522 127.101178,37.406275 127.101472,37.406044 127.101956,37.405742 127.102697,37.405386 127.103044,37.405189 127.103369,37.404969 127.103675,37.404731 127.104086,37.404342 127.104333,37.404058 127.104453,37.403900"
+                    )
+                ),
+                type: Optional(14),
+                mode: Optional("BUS"),
+                routeColor: Optional("FF3300"),
+                sectionTime: Optional(1825),
+                route: Optional("광역:9409"),
+                service: Optional(1)),
+                PedestrianNavi_TMap.Leg(
+                    distance: 233,
+                    start: PedestrianNavi_TMap.Location(
+                        name: "삼평교",
+                        lon: 127.10433055555555,
+                        lat: 37.40385277777778
+                    ),
+                    end: PedestrianNavi_TMap.Location(
+                        name: "도착지",
+                        lon: 127.103318,
+                        lat: 37.403049
+                    ),
+                    steps: Optional([PedestrianNavi_TMap.Step(
+                        linestring: "127.104294,37.40384 127.104416,37.403656 127.104546,37.40344 127.104515,37.40337",
+                        description: "대왕판교로 을 따라 58m 이동",
+                        streetName: Optional("대왕판교로"),
+                        distance: Optional(58)),
+                        PedestrianNavi_TMap.Step(
+                            linestring: "127.104515,37.40337 127.10456,37.40335",
+                            description: "좌측 횡단보도 후 5m 이동 ",
+                            streetName: Optional(""),
+                            distance: Optional(5)
+                        ),
+                        PedestrianNavi_TMap.Step(
+                            linestring: "127.10456,37.40335 127.10457,37.403294",
+                            description: "우회전 후 6m 이동 ",
+                            streetName: Optional(""),
+                            distance: Optional(6)
+                        ),
+                        PedestrianNavi_TMap.Step(
+                            linestring: "127.10457,37.403294 127.10469,37.4031",
+                            description: "횡단보도 후 25m 이동 ",
+                            streetName: Optional(""),
+                            distance: Optional(25)
+                        ),
+                        PedestrianNavi_TMap.Step(
+                            linestring: "127.10469,37.4031 127.10475,37.40305",
+                            description: "직진 후 7m 이동 ",
+                            streetName: Optional(""),
+                            distance: Optional(7)
+                        ),
+                        PedestrianNavi_TMap.Step(
+                            linestring: "127.10475,37.40305 127.10471,37.403008",
+                            description: "횡단보도 후 보행자도로 을 따라 6m 이동 ",
+                            streetName: Optional("보행자도로"),
+                            distance: Optional(6)
+                        ),
+                        PedestrianNavi_TMap.Step(
+                            linestring: "127.10471,37.403008 127.10454,37.40308 127.10449,37.403076 127.104454,37.403072 127.10395,37.40307",
+                            description: "우회전 후 70m 이동 ",
+                            streetName: Optional(""),
+                            distance: Optional(70)
+                        ),
+                        PedestrianNavi_TMap.Step(
+                            linestring: "127.10395,37.40307 127.10359,37.40307 127.10332,37.40307",
+                            description: "직진 후 판교로 을 따라 56m 이동 ",
+                            streetName: Optional("판교로"),
+                            distance: Optional(56)
+                        )
+                    ]
+                ),
+                passStopList: nil,
+                routeId: nil,
+                passShape: nil,
+                type: nil,
+                mode: Optional("WALK"),
+                routeColor: nil,
+                sectionTime: Optional(254),
+                route: nil,
+                service: nil
+                )
+            ],
+            totalDistance: 16262,
+            totalWalkTime: 573,
+            fare: PedestrianNavi_TMap.Fare(
+                regular: PedestrianNavi_TMap.RegularFare(
+                    currency: PedestrianNavi_TMap.Currency(
+                        currency: "원",
+                        currencyCode: "KRW",
+                        symbol: "￦"
+                    ),
+                    totalFare: 3200
+                )
+            ),
+            totalTime: 3077
+        )
+    )
+)

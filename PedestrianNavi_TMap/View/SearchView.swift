@@ -17,10 +17,10 @@ class SearchView: UIViewController, UITableViewDataSource, UITableViewDelegate {
     let searchButton = UIButton()
     let routesTableView = UITableView()
     var routes = [Route]() // Route 모델 배열
-    var data: [Any] = []
-    var selectedData: [Any] = []
-    var onDataUpdate: (([Any]) -> Void)?
-    var isDataUpdated = false
+    var selectedData: Route? = nil // 유저가 선택한 길찾기 정보 전달용
+    var onDataUpdate: ((Route?) -> Void)?
+    var isDataUpdated = false // 모달 페이지가 닫혔을떄 경로정보를 표시할지 여부 판단용
+    var routeButtonBottomConstraint: NSLayoutConstraint?
 
     let decoder = JSONDecoder()
 
@@ -34,6 +34,14 @@ class SearchView: UIViewController, UITableViewDataSource, UITableViewDelegate {
         routesTableView.dataSource = self
         routesTableView.delegate = self
         routesTableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
+
+        registerForKeyboardNotifications { [weak self] (keyboardHeight, isKeyboardShowing) in
+            self?.routeButtonBottomConstraint?.constant = isKeyboardShowing ? -keyboardHeight - 20 : -20
+            UIView.animate(withDuration: 0.3) {
+                self?.view.layoutIfNeeded()
+            }
+        } // 키보드 알림 설정
+        hideKeyboardWhenTappedAround() // 키보드 내려가는 탭제스쳐 인식기
     }
 
     override func viewDidDisappear(_ animated: Bool) {
@@ -97,16 +105,15 @@ class SearchView: UIViewController, UITableViewDataSource, UITableViewDelegate {
     }
 
     @objc func searchButtonTapped() {
-        transdata()
-        print(routes)
+        transdata() // 데이터 전송 (modalData)
+        print("전송된 데이터:  \(routes)")
     }
 
-    func transdata() {
+    func transdata() { // json 데이터 디코딩 + 데이터 저장및 부모뷰에도 데이터 전송
         if let jsonData = loadJsonDataFromFile() {
             if let transitData = decodeTransitData(from: jsonData) {
                 routes = transitData.metaData.plan.itineraries.map { Route(itinerary: $0) }
-                data.append(routes)
-                delegate?.takeData(data: data)
+                delegate?.takeData(data: routes) // ViewController의 modalData에 정보 저장
                 DispatchQueue.main.async {
                     self.routesTableView.reloadData()
                 }
@@ -128,7 +135,7 @@ class SearchView: UIViewController, UITableViewDataSource, UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let selectedRoute = routes[indexPath.row]
-//        selectedData = selectedRoute
+        selectedData = selectedRoute // 자료형의 변경
         for leg in selectedRoute.itinerary.legs {
             if let steps = leg.steps {
                 for step in steps {
@@ -156,9 +163,9 @@ class SearchView: UIViewController, UITableViewDataSource, UITableViewDelegate {
     }
 
     func close() {
-        print(selectedData)
-        onDataUpdate?(selectedData)
-        updateData()
+        print("보내질 예정 선택된 경로 데이터: \(String(describing: selectedData))")
+        onDataUpdate?(selectedData ?? nil)
+        updateData() // isDataUpdated = true 로 변경
         dismiss(animated: true)
     }
 
@@ -190,101 +197,10 @@ class SearchView: UIViewController, UITableViewDataSource, UITableViewDelegate {
             return nil
         }
     }
+
+    deinit {
+        unregisterForKeyboardNotifications() //키보드 알림 해제
+    }
 }
 
 
-struct Route {
-    // 'Plan' 구조체의 데이터를 저장할 속성들을 여기에 정의합니다.
-    // 예시로, 'Itinerary' 객체들의 배열을 저장할 수 있습니다.
-    var itinerary: Itinerary
-}
-
-struct TransitData: Codable {
-    let metaData: MetaData
-}
-
-struct MetaData: Codable {
-    let plan: Plan
-    let requestParameters: RequestParameters?
-}
-
-struct Plan: Codable {
-    let itineraries: [Itinerary]
-}
-
-struct Itinerary: Codable {
-    let transferCount: Int
-    let pathType: Int
-    let totalWalkDistance: Int
-    let legs: [Leg]
-    let totalDistance: Int
-    let totalWalkTime: Int
-    let fare: Fare
-    let totalTime: Int
-}
-
-struct Leg: Codable {
-    let distance: Int
-    let start: Location
-    let end: Location
-    let steps: [Step]?
-    let passStopList: PassStopList?
-    let routeId: String?
-    let passShape: PassShape?
-    let type: Int?
-    let mode: String?
-    let routeColor: String?
-    let sectionTime: Int?
-    let route: String?
-    let service: Int?
-}
-
-struct Step: Codable {
-    let linestring: String
-    let description: String
-    let streetName: String?
-    let distance: Int?
-}
-
-struct Location: Codable {
-    let name: String
-    let lon: Double
-    let lat: Double
-}
-
-struct Fare: Codable {
-    let regular: RegularFare
-}
-
-struct RegularFare: Codable {
-    let currency: Currency
-    let totalFare: Int
-}
-
-struct Currency: Codable {
-    let currency: String
-    let currencyCode: String
-    let symbol: String
-}
-
-struct RequestParameters: Codable {
-    let startX, reqDttm, locale, endY,  endX, startY: String?
-    let busCount, expressbusCount: Int?
-    let trainCount, ferryCount, subwayCount, wideareaRouteCount, subwayBusCount, airplaneCount: Int?
-}
-
-struct PassStopList: Codable {
-    let stationList: [StationList]
-}
-
-struct StationList: Codable {
-    let stationName : String
-    let stationID : String
-    let lat : String
-    let lon : String
-    let index : Int
-}
-
-struct PassShape: Codable {
-    let linestring: String
-}
