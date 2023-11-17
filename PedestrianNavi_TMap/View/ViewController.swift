@@ -45,7 +45,7 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
 
         setupMapView()
         setUpUI()
-//        imuCheck.startMotionUpdates()
+//        imuCheck.startMotionUpdates() // 콘솔창이 너무 어지러워서 임시 차단
 
         setupSideMenu()
 
@@ -60,6 +60,12 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+        // 중단된 뷰 컨트롤러의 뷰 해제
+        for viewController in self.children {
+            if !viewController.isViewLoaded || (viewController.view.window == nil) {
+                viewController.view = nil
+            }
+        }
     }
 
     override func viewWillDisappear(_ animated: Bool) {
@@ -147,30 +153,6 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
     }
 
     @objc func searchLocationModal() {
-//        userLocation?.showsUserLocation = true // 사용자의 위치정보를 파란색 점으로 표시
-//
-//        clearMarkers()
-//        clearPolylines()
-//
-//        guard let address = addressTextField.text, !address.isEmpty else {
-//            print("Address is empty")
-//            return
-//        }
-//
-//        print("address: \(address)")
-//
-//        pathData.requestFindAllPOI(address, count: 30) { (results, error) in
-//            guard error == nil else {
-//                print("Error finding POIs: \(error!.localizedDescription)")
-//                return
-//            }
-//
-//            if let results = results {
-//                for result in results {
-//                    self.setMarker(position: result.coordinate!)
-//                }
-//            }
-//        }
 
         let modalView = SearchView()
         modalView.delegate = self // 자신을 delegate로 지정
@@ -179,7 +161,6 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
             self?.modalLineData = updatedData // 업데이트된 데이터 저장
         }
         present(modalView, animated: true)
-
     }
 
     func setupMapView() {
@@ -213,15 +194,6 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
 
     func setUpUI() {
 
-        // 주소 검색 텍스트 입력창 설정
-        addressTextField.placeholder = "주소 검색"
-        addressTextField.borderStyle = .none
-        addressTextField.backgroundColor = UIColor.white
-        addressTextField.layer.cornerRadius = 8
-        addressTextField.layer.masksToBounds = true
-        addressTextField.layer.sublayerTransform = CATransform3DMakeTranslation(10, 0, 0) // Padding left
-        view.addSubview(addressTextField)
-
         // 검색 버튼 설정
         searchButton = MakingUI.setButton(title: "검색", selector: #selector(searchLocationModal))
         self.view.addSubview(searchButton)
@@ -235,25 +207,19 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
 //        self.view.addSubview(routeButton)
 
         // 오토 레이아웃 설정
-        addressTextField.translatesAutoresizingMaskIntoConstraints = false
         searchButton.translatesAutoresizingMaskIntoConstraints = false
         routeButton.translatesAutoresizingMaskIntoConstraints = false
         menuButton.translatesAutoresizingMaskIntoConstraints = false
 
         // NSLayoutConstraint를 사용하여 오토 레이아웃 설정
         NSLayoutConstraint.activate([
-            // 주소 입력창은 상단에 위치
-            addressTextField.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 5),
-            addressTextField.leadingAnchor.constraint(equalTo: menuButton.trailingAnchor, constant: 20),
-            addressTextField.trailingAnchor.constraint(equalTo: searchButton.leadingAnchor, constant: -10),
-
             // 검색 버튼은 주소 입력창의 오른쪽에 위치
             searchButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            searchButton.centerYAnchor.constraint(equalTo: addressTextField.centerYAnchor),
+            searchButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 0),
 
             // 메뉴 버튼은 주소 입력창 왼쪽에 위치
-            menuButton.trailingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            menuButton.centerYAnchor.constraint(equalTo: addressTextField.centerYAnchor),
+            menuButton.trailingAnchor.constraint(equalTo: view.leadingAnchor, constant: 50),
+            menuButton.centerYAnchor.constraint(equalTo: searchButton.centerYAnchor),
 
             // 경로 탐색 버튼은 하단 중앙에 위치
             routeButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20),
@@ -312,6 +278,7 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
                 polyline.map = self.mapView
                 self.polylines.append(polyline)
             }
+            mapView.trackingMode = .followWithHeading // 트래킹 모드 활성화
         }// 선택했던 경로를 지도에 표시(polyline)
     } // 모달창이 경로를 선택하면서 닫힐떄 호출되는 메소드
 
@@ -388,22 +355,7 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
         }
     }
 
-    func locationCheck(on viewController: UIViewController) {
-
-        print("location check")
-
-        locationManager = CLLocationManager()
-
-        locationManager.delegate = self
-        locationManager.desiredAccuracy = kCLLocationAccuracyBestForNavigation // 최상의 정확도
-        locationManager.distanceFilter = 30 // 30미터마다 위치업데이트를 받음
-        //        locationManager.distanceFilter = kCLDistanceFilterNone // 미세한 움직임에 대한 피드백도 받음
-
-        locationManager.requestWhenInUseAuthorization() // 위치 서비스 권한 요청
-        locationManager.requestAlwaysAuthorization() // 언제나?
-        locationManager.startUpdatingLocation() // 위치 업데이트 시작
-
-
+    func checkAuthoriztion() {
         let status = locationManager.authorizationStatus
 
         let logOkAction = UIAlertAction(title: "네", style: UIAlertAction.Style.default) {
@@ -420,8 +372,28 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
         }
 
         if status == .denied || status == .restricted {
-            MakingUI.setAlert(title: "권한 필요", message: "위치 서비스 권한이 필요합니다", actions: [logOkAction, logNoAction], on: self)
+            MakingUI.setAlert(title: "권한 필요", message: "위치 서비스 권한이 필요합니다. 위치 서비스 권한 제한시 앱이 종료됩니다.", actions: [logOkAction, logNoAction], on: self)
+
         }
+    }
+
+    func locationCheck(on viewController: UIViewController) {
+
+        print("location check")
+
+        locationManager = CLLocationManager()
+
+        locationManager.delegate = self
+        locationManager.desiredAccuracy = kCLLocationAccuracyBestForNavigation // 최상의 정확도
+        locationManager.distanceFilter = 30 // 30미터마다 위치업데이트를 받음
+        //        locationManager.distanceFilter = kCLDistanceFilterNone // 미세한 움직임에 대한 피드백도 받음
+
+//        locationManager.requestWhenInUseAuthorization() // 위치 서비스 권한 요청(앱을 사용하고 있을떄만)
+        locationManager.requestAlwaysAuthorization() // 백그라운드에서도 위치정보에 접근가능 권한 요청
+        locationManager.startUpdatingLocation() // 위치 업데이트 시작
+
+        checkAuthoriztion()
+
     }
 
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) { // 위치 정보가 업데이트 되었을 때 호출되는 델리게이트 메소드
@@ -453,12 +425,16 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
             userLocation?.showsUserLocation = true // 사용자의 위치정보를 파란색 점으로 표시
         case .notDetermined:
             print("권한 결정 안함")
+            checkAuthoriztion()
         case .restricted:
             print("권한 제한")
+            checkAuthoriztion()
         case .denied:
             print("권한 거부")
+            checkAuthoriztion()
         @unknown default:
             print("알 수 없는 권한")
+            checkAuthoriztion()
         }
     }
 
@@ -613,7 +589,7 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
         menuTableVC.menuItems.append(LeftMenuData(title: "초기화", onClick: {[weak self] in self?.initMapView()}))
 
         // 기본 기능
-        menuTableVC.menuItems.append(LeftMenuData(title: "화면이동", onClick: {[weak self] in self?.basicFunc001()}))
+        menuTableVC.menuItems.append(LeftMenuData(title: "현재위치", onClick: {[weak self] in self?.basicFunc001()}))
         menuTableVC.menuItems.append(LeftMenuData(title: "대중교통 경로", onClick: {[weak self] in self?.transit(startPoint: self!.currentLocation!, endPoint: self?.selectLocation!)}))
 
 
@@ -642,6 +618,8 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
 extension ViewController {
     //맵 초기화
         public func initMapView(){
+            clearMarkers()
+            clearPolylines()
             mapView.removeFromSuperview() // 지도 삭제
             addressTextField.removeFromSuperview() // 입력창 삭제
             searchButton.removeFromSuperview() // 검색 버튼 삭제
@@ -651,6 +629,8 @@ extension ViewController {
             mapView.delegate = nil
 
             mapView.delegate = self
+
+            mapView.trackingMode = .none
 
             // mapView를 self.view에 추가합니다.
             self.view.addSubview(mapView) // 지도 다시 추가
@@ -673,6 +653,7 @@ extension ViewController {
     public func basicFunc001(){
         self.mapView?.setCenter(currentLocation) // 현재 사용자 위치를 중심으로
         mapView.animateTo(zoom: 17) // 줌레벨 조정
+        mapView.trackingMode = .followWithHeading
         dismissSideMenu()
     }
 

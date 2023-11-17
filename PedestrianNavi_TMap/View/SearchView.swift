@@ -14,7 +14,7 @@ class SearchView: UIViewController, UITableViewDataSource, UITableViewDelegate {
     weak var delegate: ModalDelegate?
     let departureTextField = UITextField()
     let destinationTextField = UITextField()
-    let searchButton = UIButton()
+    var searchButton = UIButton()
     let routesTableView = UITableView()
     var routes = [Route]() // Route 모델 배열
     var selectedData: Route? = nil // 유저가 선택한 길찾기 정보 전달용
@@ -61,10 +61,7 @@ class SearchView: UIViewController, UITableViewDataSource, UITableViewDelegate {
         destinationTextField.borderStyle = .roundedRect
 
         // 검색 버튼 설정
-        searchButton.setTitle("검색", for: .normal)
-        searchButton.backgroundColor = .blue
-        searchButton.setTitleColor(.white, for: .normal)
-        searchButton.addTarget(self, action: #selector(searchButtonTapped), for: .touchUpInside)
+        searchButton = MakingUI.setButton(title: "검색", selector: #selector(searchButtonTapped))
 
         // 테이블 뷰 설정
         routesTableView.tableFooterView = UIView() // 빈 셀 제거
