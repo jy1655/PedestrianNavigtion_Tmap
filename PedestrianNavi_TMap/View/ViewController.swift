@@ -25,6 +25,7 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
     var gpsStatus: String = "UNKNOWN" { didSet { detectStatus() } } // GPS 상태변화 확인용
     var markers:Array<TMapMarker> = [] // 마커를 관리하기 위한 배열
     var polylines:Array<TMapPolyline> = [] // 폴리라인을 관리하기 위한배열
+    var mkPolylines:Array<MKPolyline> = []
     let addressTextField = UITextField()
     var searchButton = UIButton()
     var menuButton = UIButton()
@@ -34,7 +35,7 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
     var isTableViewVisible = false
     let imuCheck = IMUCheck()
     var menuTableViewController: MenuTableViewController?
-    let userLocation: MKMapView? = nil // 사용자 위치표시용
+    let mkView: MKMapView? = nil // 사용자 위치표시용
     var modalData = [Route]()
     var modalLineData: Route?
 
@@ -54,7 +55,7 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         locationCheck(on: self)
-        userLocation?.showsUserLocation = true // 사용자의 위치정보를 파란색 점으로 표시
+        mkView?.showsUserLocation = true // 사용자의 위치정보를 파란색 점으로 표시
     }
 
     override func didReceiveMemoryWarning() {
@@ -72,7 +73,7 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
     }
 
     @objc func requestRoute() {
-        userLocation?.showsUserLocation = true // 사용자의 위치정보를 파란색 점으로 표시
+        mkView?.showsUserLocation = true // 사용자의 위치정보를 파란색 점으로 표시
 
         clearMarkers()
         clearPolylines()
@@ -336,6 +337,20 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
         return polylines
     }
 
+    func convertPolyline() {
+        for polyline in polylines {
+            let linePoints = polyline.path
+            let coordinates = linePoints.map {
+                CLLocationCoordinate2D(latitude:  $0.latitude, longitude: $0.longitude)
+            }
+            let mkPolyline = MKPolyline(coordinates: coordinates, count: coordinates.count)
+            mkPolylines.append(mkPolyline)
+        }
+    }
+
+    
+
+
 
     func detectStatus() {
 
@@ -422,7 +437,7 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
         case .authorizedWhenInUse, .authorizedAlways:
             // 권한이 승인되었을때
             print("권한 설정 완료")
-            userLocation?.showsUserLocation = true // 사용자의 위치정보를 파란색 점으로 표시
+            mkView?.showsUserLocation = true // 사용자의 위치정보를 파란색 점으로 표시
         case .notDetermined:
             print("권한 결정 안함")
             checkAuthoriztion()
