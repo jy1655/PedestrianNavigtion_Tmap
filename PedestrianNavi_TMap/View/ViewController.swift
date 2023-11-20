@@ -846,6 +846,36 @@ extension ViewController {
 
         _ = TMapPolyline(coordinates: path)
     }
+
+//    func checkUserIsOnRoute( _ currentLocation: CLLocationCoordinate2D) {
+//        // 현재 위치와 계산된 경로를 비교하여 사용자가 경로를 벗어났는지 확인
+//        guard let routePolyline = self.polylines.polyline else { return }
+//
+//        let polylineRenderer = MKPolylineRenderer(polyline: routePolyline)
+//        let currentPoint = MKMapPoint(currentLocation)
+//        let nearestPointOnRoute = polylineRenderer.point(for: currentPoint)
+//
+//        let distance = currentPoint.distance(to: nearestPointOnRoute)
+//
+//                // 일정 거리 이상 떨어졌는지 확인 (예: 50미터)
+//        if distance > 50 {
+//            // 사용자에게 알림 제공
+//            notifyUserOffRoute()
+//        }
+//        // 벗어났다면 경로를 재계산하거나 사용자에게 알림 제공
+//    }
+//
+//    func notifyUserOffRoute() {
+//        // 사용자에게 경로 이탈 알림 제공 (예: UIAlert, 음성 메시지 등)
+//
+//        MakingUI.setAlert(title: "경로 이탈", message: "경로에서 벗어났습니다. 경로를 재설정하시겠습니까?", actions: [confirm,], on: self)
+//        let alert = UIAlertController(title: "경로 이탈", message: "경로에서 벗어났습니다. 경로를 재설정하시겠습니까?", preferredStyle: .alert)
+//        let confirm = UIAlertAction(title: "재설정", style: .default, handler: { _ in
+//            // 경로 재설정 로직
+//        })
+//        alert.addAction(UIAlertAction(title: "취소", style: .cancel, handler: nil))
+//        self.present(alert, animated: true)
+//    }
 }
 
 protocol ModalDelegate: AnyObject { // 모달창에서 메소드를 공유하기 위한 Delegate

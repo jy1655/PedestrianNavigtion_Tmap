@@ -36,7 +36,10 @@ class SearchView: UIViewController, UITableViewDataSource, UITableViewDelegate {
         routesTableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
 
         registerForKeyboardNotifications { [weak self] (keyboardHeight, isKeyboardShowing) in
-            self?.routeButtonBottomConstraint?.constant = isKeyboardShowing ? -keyboardHeight - 20 : -20
+//            self?.routeButtonBottomConstraint?.constant = isKeyboardShowing ? -keyboardHeight - 20 : -20
+//            UIView.animate(withDuration: 0.3) {
+//                self?.view.layoutIfNeeded()
+            self?.routesTableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: keyboardHeight, right: 0) // 테이블 뷰가 키보드 높이 만큼 하단이 올라와서 하단 선택지를 선택할 수 있도록 함
             UIView.animate(withDuration: 0.3) {
                 self?.view.layoutIfNeeded()
             }
@@ -117,6 +120,7 @@ class SearchView: UIViewController, UITableViewDataSource, UITableViewDelegate {
             }
         }
     }
+
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         print(routes.count)
         return routes.count
@@ -155,7 +159,6 @@ class SearchView: UIViewController, UITableViewDataSource, UITableViewDelegate {
             }
             close() // 선택시 모달창 닫기
         }
-
         // 선택된 경로를 지도에 표시
     }
 

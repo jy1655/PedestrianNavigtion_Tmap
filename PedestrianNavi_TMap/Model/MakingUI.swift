@@ -95,6 +95,10 @@ struct MakingUI {
 }
 
 extension UIViewController {
+    var bottomConstraint: NSLayoutConstraint! {
+            get { return nil }
+            set { /* do nothing */ }
+        }
 
     /** 키보드 알림 관련 확장 메소드 **/
     typealias KeyboardUIUpdate = (_ keyboardHeight: CGFloat, _ isKeyboardShowing: Bool) -> Void
@@ -139,6 +143,7 @@ extension UIViewController {
         // 여기에 뷰의 하단 제약을 업데이트하는 로직을 구현합니다.
         // 예: self.routeButtonBottomConstraint?.constant = constant
         // 이 부분은 각 뷰 컨트롤러의 구현에 따라 달라질 수 있습니다.
+        bottomConstraint.constant = constant
         UIView.animate(withDuration: 0.3) {
             self.view.layoutIfNeeded()
         }
@@ -155,3 +160,7 @@ extension UIViewController {
     } // 키보드가 아닌 화면을 클릭하면 키보드가 내려가도록 하는 탭제스쳐 인식기 생성
 }
 
+protocol KeyboardHandling {
+    var bottomConstraint: NSLayoutConstraint! { get set }
+    func updateBottomLayoutConstraint(height: CGFloat)
+}
