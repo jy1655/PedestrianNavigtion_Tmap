@@ -64,7 +64,7 @@ class SearchView: UIViewController, UITableViewDataSource, UITableViewDelegate {
         destinationTextField.borderStyle = .roundedRect
 
         // 검색 버튼 설정
-        searchButton = MakingUI.setButton(title: "검색", selector: #selector(searchButtonTapped))
+        searchButton = setButton(title: "검색", selector: #selector(searchButtonTapped))
 
         // 테이블 뷰 설정
         routesTableView.tableFooterView = UIView() // 빈 셀 제거

@@ -25,7 +25,7 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
     var gpsStatus: String = "UNKNOWN" { didSet { detectStatus() } } // GPS 상태변화 확인용
     var markers:Array<TMapMarker> = [] // 마커를 관리하기 위한 배열
     var polylines:Array<TMapPolyline> = [] // 폴리라인을 관리하기 위한배열
-    let addressTextField = UITextField()
+    var labelField = UILabel()
     var searchButton = UIButton()
     var menuButton = UIButton()
     var routeButton = UIButton()
@@ -38,6 +38,7 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
     var modalData = [Route]()
     var modalLineData: Route?
     var isNavigationActive: Bool = false
+    let customView = MarkerUIView()
 
 
 
@@ -77,8 +78,6 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
 
         clearMarkers()
         clearPolylines()
-
-        addressTextField.resignFirstResponder() // 키보드가 보이는 경우 숨깁니다
 
         mapView.trackingMode = .followWithHeading // 트래킹 모드 활성화
 
@@ -196,14 +195,14 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
     func setUpUI() {
 
         // 검색 버튼 설정
-        searchButton = MakingUI.setButton(title: "검색", selector: #selector(searchLocationModal))
+        searchButton = setButton(title: "검색", selector: #selector(searchLocationModal))
         self.view.addSubview(searchButton)
 
         //        // 메뉴 버튼 설정
-        menuButton = MakingUI.setButton(title: "Menu", selector: #selector(presentSideMenu))
+        menuButton = setButton(title: "Menu", selector: #selector(presentSideMenu))
         self.view.addSubview(menuButton)
         // 경로 탐색 버튼 설정
-        routeButton = MakingUI.setButton(title: "경로 탐색", selector: #selector(requestRoute))
+        routeButton = setButton(title: "경로 탐색", selector: #selector(requestRoute))
         view.addSubview(routeButton)
 //        self.view.addSubview(routeButton)
 
@@ -346,7 +345,7 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
 
         if gpsStatus == "NO_SIGNAL" {
             print("GPS 신호 없음")
-            MakingUI.setAlert(title: "GPS 오류!", message: "GPS 신호가 없습니다!", actions: [action1], on: self)
+            setAlert(title: "GPS 오류!", message: "GPS 신호가 없습니다!", actions: [action1], on: self)
         } else if gpsStatus == "BAD" {
             print("GPS 신호가 약합니다")
         } else if gpsStatus == "TUNNEL" {
@@ -375,7 +374,7 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
         }
 
         if status == .denied || status == .restricted {
-            MakingUI.setAlert(title: "권한 필요", message: "위치 서비스 권한이 필요합니다. 위치 서비스 권한 제한시 앱이 종료됩니다.", actions: [logOkAction, logNoAction], on: self)
+            setAlert(title: "권한 필요", message: "위치 서비스 권한이 필요합니다. 위치 서비스 권한 제한시 앱이 종료됩니다.", actions: [logOkAction, logNoAction], on: self)
 
         }
     }
@@ -418,7 +417,7 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
 
                 let alert1 = UIAlertAction(title: "확인", style: .default)
                 if distance > 10 { // 10m 이상 경로를 벗어난다면
-                    MakingUI.setAlert(title: "경로 이탈", message: "경로를 벗어났습니다. 약 \(ceil(distance))m", actions: [alert1], on: self)
+                    setAlert(title: "경로 이탈", message: "경로를 벗어났습니다. 약 \(ceil(distance))m", actions: [alert1], on: self)
                     print("경고문")
                 }
                 // 여기에 경로 계산 및 업데이트 로직 추가
@@ -458,6 +457,8 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
 
     func mapView(_ mapView: TMapView, singleTapOnMap location: CLLocationCoordinate2D) {
         print("싱글탭")
+
+        customView.removeFromSuperview()
         view.endEditing(true) // 키보드가 올라와 있었다면 내린다.
     }
 
@@ -472,22 +473,20 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
     func mapView(_ mapView: TMapView, doubleTapOnMap position: CLLocationCoordinate2D) {
         print("지도 더블 탭")
 
-        _ = TMapMarker(position: position)
-
         setMarker(position: position)
 
-        //        let label = UILabel(frame: CGRect(x: 0, y: 0, width: 30, height: 50))
-        //        label.text = "좌측"
-        //        marker.leftCalloutView = label
-        //        let label2 = UILabel(frame: CGRect(x: 0, y: 0, width: 30, height: 50))
-        //        label2.text = "우측"
-        //        marker.rightCalloutView = label2
+//        let label2 = UILabel(frame: CGRect(x: 300, y: 500, width: 30, height: 50))
+//        label2.text = "우측"
+//        marker.rightCalloutView = label2
     }
 
     func mapView(_ mapView: TMapView, tapOnMarker marker: TMapMarker) {
         print("마커 탭")
+//        self.view.addSubview(labelField)
+
         selectLocation = marker.position
         print("selectLocation latitude: \(String(describing: selectLocation?.latitude)), longitude: \(String(describing: selectLocation?.longitude))")
+
     }
 
 //    func mapView(_ mapView: TMapView, shouldChangeFrom oldPosition: CLLocationCoordinate2D, to newPosition: CLLocationCoordinate2D) -> Bool {
@@ -505,13 +504,28 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
                     marker.draggable = false
                     marker.title = result["fullAddress"] as? String
                     marker.subTitle = result["legalDong"] as? String
-                    print(result)
+                    
+                    marker.setTapCallback { [weak self] _ in
+                        guard let self = self else { return }
 
+                        // 기존 뷰 제거
+//                        customView.removeFromSuperview()
+
+                        // 새로운 뷰 생성 및 구성
+                        customView.configureView() // 뷰의 크기 및 위치 설정
+
+                        customView.createCalloutView()
+                        customView.configure(with: result)
+
+                        mapView.addSubview(customView)
+                    }
+                    print(result)
                     self.markers.append(marker)
                 }
             }
         }
     }
+
 
     func transitMarker() { // 대중교통 이용시 승차, 환승, 하차지역 정보 마커표시 메소드
         if modalLineData?.itinerary != nil {
@@ -609,7 +623,6 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
     }
 
     func initTableViewData() {
-        print("확인")
 
         guard let menuTableVC = menuTableViewController else { return }
 
@@ -621,7 +634,7 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
 
 
         // api
-        //            self.leftArray?.append(LeftMenuData(title: "자동완성", onClick: objFunc51))
+        menuTableVC.menuItems.append(LeftMenuData(title: "11", onClick: {[weak self] in self?.objFunc51()}))
         //            self.leftArray?.append(LeftMenuData(title: "BizCategory", onClick: objFunc52))
         menuTableVC.menuItems.append(LeftMenuData(title: "POI 검색", onClick: {[weak self] in self?.objFunc53()}))
         menuTableVC.menuItems.append(LeftMenuData(title: "POI 주변검색", onClick: {[weak self] in self?.objFunc54()}))
@@ -648,7 +661,6 @@ extension ViewController {
             clearMarkers()
             clearPolylines()
             mapView.removeFromSuperview() // 지도 삭제
-            addressTextField.removeFromSuperview() // 입력창 삭제
             searchButton.removeFromSuperview() // 검색 버튼 삭제
             menuButton.removeFromSuperview() // 메뉴 버튼 삭제
             routeButton.removeFromSuperview() // 경로탐색 버튼 삭제
@@ -684,12 +696,17 @@ extension ViewController {
         dismissSideMenu()
     }
 
+    public func objFunc51() {
+        dismissSideMenu()
+        mapView.perform(#selector(presentSideMenu))
+    }
+
     public func objFunc53() {
         self.clearMarkers()
         self.clearPolylines()
 
         let pathData = TMapPathData()
-        pathData.requestFindAllPOI(addressTextField.text ?? "SK", count: 20) { (result, error)->Void in
+        pathData.requestFindAllPOI("SK", count: 20) { (result, error)->Void in
             if let result = result {
                 DispatchQueue.main.async {
                     for poi in result {
@@ -713,7 +730,7 @@ extension ViewController {
 
         let pathData = TMapPathData()
 
-        pathData.requestFindAroundKeywordPOI(center, keywordName: addressTextField.text ?? "SK", radius: 500, count: 20, completion: { (result, error)->Void in
+        pathData.requestFindAroundKeywordPOI(center, keywordName: "SK", radius: 500, count: 20, completion: { (result, error)->Void in
             if let result = result {
                 DispatchQueue.main.async {
                     for poi in result {
@@ -827,8 +844,6 @@ extension ViewController {
     public func transit(startPoint: CLLocationCoordinate2D, endPoint: CLLocationCoordinate2D?) {
         clearMarkers()
         clearPolylines()
-
-        addressTextField.resignFirstResponder() // 키보드가 보이는 경우 숨깁니다
 
         mapView.trackingMode = .follow // 트래킹 모드 활성화
 
