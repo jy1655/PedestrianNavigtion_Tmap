@@ -2,11 +2,7 @@
 //  MarkerUIView.swift
 //  PedestrianNavi_TMap
 //
-<<<<<<< HEAD
 //  Created by 황재영 on 11/21/23.
-=======
-//  Created by 황재영 on 11/22/23.
->>>>>>> dc8d375 (test)
 //
 
 import UIKit
