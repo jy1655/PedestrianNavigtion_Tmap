@@ -38,7 +38,10 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
     var modalData = [Route]()
     var modalLineData: Route?
     var currentCustomView: MarkerUIView?
+<<<<<<< HEAD
     var isNavigationActive = false
+=======
+>>>>>>> dc8d375 (test)
 
 
 

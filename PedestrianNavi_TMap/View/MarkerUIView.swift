@@ -2,7 +2,11 @@
 //  MarkerUIView.swift
 //  PedestrianNavi_TMap
 //
+<<<<<<< HEAD
 //  Created by 황재영 on 11/21/23.
+=======
+//  Created by 황재영 on 11/22/23.
+>>>>>>> dc8d375 (test)
 //
 
 import UIKit
@@ -15,7 +19,6 @@ class MarkerUIView: UIView {
 
     func createCalloutView() {
         print("콜아웃 뷰 만들기")
-        
         // 여기에서 커스텀 뷰를 생성하고 설정합니다.
         self.frame = CGRect(x: 20, y: 130, width: 300, height: 500)
         self.backgroundColor = .white
