@@ -47,58 +47,13 @@ struct MakingUI {
         return coordinates
     }
 
-    static func setButton(title: String, selector: Selector) -> UIButton { // 버튼 만들기
-        // iOS 14 미만에서 사용하는 기존의 UIButton 초기화 방식
-        let button = UIButton()
-        button.setTitle(title, for: .normal)
-        button.addTarget(self, action: selector, for: .touchUpInside) // selector로 버튼 클릭시 구현될 메소드 작성
-
-        button.addAction(UIAction { _ in touchDownAction(button) }, for: .touchDown) // 버튼을 눌렀을때
-        button.addAction(UIAction { _ in touchUpAction(button) }, for: [.touchUpInside, .touchUpOutside]) // 버튼이 눌렸다가 올라갔을때
-        // 손가락이 버튼 밖으로 이동한 후 떼지는 경우
-        button.addAction(UIAction { _ in touchUpAction(button) }, for: .touchUpOutside)
-        button.addAction(UIAction { _ in touchUpAction(button) }, for: .touchCancel)
-
-        button.backgroundColor = UIColor.systemBlue
-        button.layer.cornerRadius = 5
-        button.clipsToBounds = true
-
-        return button
-    }
-
-    static func touchDownAction(_ sender: UIButton) {
-            UIView.animate(withDuration: 0.2) {
-                sender.transform = CGAffineTransform(scaleX: 0.95, y: 0.95)
-            } // 크기를 95%로 줄이는 메서드
-        } // 버튼이 눌렸을 때 호출되는 메서드
-
-
-    static func touchUpAction(_ sender: UIButton) {
-            UIView.animate(withDuration: 0.2) {
-                sender.transform = CGAffineTransform.identity
-            } // 크기를 원래대로 되돌리는 메서드
-        } // 버튼에서 손을 떼었을 때 호출되는 메서드
-
-    static func setAlert(title: String, message: String, actions: [UIAlertAction], on viewController: UIViewController) { // 알람기능 만들어두기
-        print("버튼생성 : \(title)")
-        let alert = UIAlertController(
-            title: title,
-            message: message,
-            preferredStyle: UIAlertController.Style.alert
-        )
-        for action in actions {
-            alert.addAction(action)
-        }
-        viewController.present(alert, animated: true)
-    }
-
 }
 
 extension UIViewController {
     var bottomConstraint: NSLayoutConstraint! {
-            get { return nil }
-            set { /* do nothing */ }
-        }
+        get { return nil }
+        set { /* do nothing */ }
+    }
 
     /** 키보드 알림 관련 확장 메소드 **/
     typealias KeyboardUIUpdate = (_ keyboardHeight: CGFloat, _ isKeyboardShowing: Bool) -> Void
@@ -158,7 +113,56 @@ extension UIViewController {
     @objc private func dismissKeyboard() {
         view.endEditing(true)
     } // 키보드가 아닌 화면을 클릭하면 키보드가 내려가도록 하는 탭제스쳐 인식기 생성
+
+
+    /** 버튼, 알림관련 메소드 **/
+    func setButton(title: String, selector: Selector) -> UIButton { // 버튼 만들기
+        // iOS 14 미만에서 사용하는 기존의 UIButton 초기화 방식
+        let button = UIButton()
+        button.setTitle(title, for: .normal)
+        button.addTarget(self, action: selector, for: .touchUpInside) // selector로 버튼 클릭시 구현될 메소드 작성
+
+        button.addAction(UIAction { _ in self.touchDownAction(button) }, for: .touchDown) // 버튼을 눌렀을때
+        button.addAction(UIAction { _ in self.touchUpAction(button) }, for: [.touchUpInside, .touchUpOutside]) // 버튼이 눌렸다가 올라갔을때
+        // 손가락이 버튼 밖으로 이동한 후 떼지는 경우
+        button.addAction(UIAction { _ in self.touchUpAction(button) }, for: .touchUpOutside)
+        button.addAction(UIAction { _ in self.touchUpAction(button) }, for: .touchCancel)
+
+        button.backgroundColor = UIColor.systemBlue
+        button.layer.cornerRadius = 5
+        button.clipsToBounds = true
+
+        return button
+    }
+
+    func touchDownAction(_ sender: UIButton) {
+            UIView.animate(withDuration: 0.2) {
+                sender.transform = CGAffineTransform(scaleX: 0.95, y: 0.95)
+            } // 크기를 95%로 줄이는 메서드
+        } // 버튼이 눌렸을 때 호출되는 메서드
+
+    func touchUpAction(_ sender: UIButton) {
+            UIView.animate(withDuration: 0.2) {
+                sender.transform = CGAffineTransform.identity
+            } // 크기를 원래대로 되돌리는 메서드
+        } // 버튼에서 손을 떼었을 때 호출되는 메서드
+
+    func setAlert(title: String, message: String, actions: [UIAlertAction], on viewController: UIViewController) { // 알람기능 만들어두기
+        print("버튼생성 : \(title)")
+        let alert = UIAlertController(
+            title: title,
+            message: message,
+            preferredStyle: UIAlertController.Style.alert
+        )
+        for action in actions {
+            alert.addAction(action)
+        }
+        viewController.present(alert, animated: true)
+    }
+
 }
+
+
 
 protocol KeyboardHandling {
     var bottomConstraint: NSLayoutConstraint! { get set }
