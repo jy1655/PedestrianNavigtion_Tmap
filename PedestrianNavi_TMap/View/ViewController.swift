@@ -25,7 +25,7 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
     var gpsStatus: String = "UNKNOWN" { didSet { detectStatus() } } // GPS 상태변화 확인용
     var markers:Array<TMapMarker> = [] // 마커를 관리하기 위한 배열
     var polylines:Array<TMapPolyline> = [] // 폴리라인을 관리하기 위한배열
-    var labelField = UILabel()
+    let addressTextField = UITextField()
     var searchButton = UIButton()
     var menuButton = UIButton()
     var routeButton = UIButton()
@@ -34,11 +34,10 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
     var isTableViewVisible = false
     let imuCheck = IMUCheck()
     var menuTableViewController: MenuTableViewController?
-    let mkView: MKMapView? = nil // 사용자 위치표시용
+    let userLocation: MKMapView? = nil // 사용자 위치표시용
     var modalData = [Route]()
     var modalLineData: Route?
-    var isNavigationActive: Bool = false
-    var currentCustomView: MarkerUIView? // 현재 표시된 MarkerUIView
+    var currentCustomView: MarkerUIView?
 
 
 
@@ -56,7 +55,7 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         locationCheck(on: self)
-        mkView?.showsUserLocation = true // 사용자의 위치정보를 파란색 점으로 표시
+        userLocation?.showsUserLocation = true // 사용자의 위치정보를 파란색 점으로 표시
     }
 
     override func didReceiveMemoryWarning() {
@@ -74,10 +73,12 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
     }
 
     @objc func requestRoute() {
-        mkView?.showsUserLocation = true // 사용자의 위치정보를 파란색 점으로 표시
+        userLocation?.showsUserLocation = true // 사용자의 위치정보를 파란색 점으로 표시
 
         clearMarkers()
         clearPolylines()
+
+        addressTextField.resignFirstResponder() // 키보드가 보이는 경우 숨깁니다
 
         mapView.trackingMode = .followWithHeading // 트래킹 모드 활성화
 
@@ -255,7 +256,6 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
     }
 
     func modalViewDidDisappear() {
-        stopNavigation()
         print("전송받은 전체 데이터: \(modalData)")
         print("경로를 표시해야할 데이터: \(String(describing: modalLineData))")
 
@@ -281,7 +281,6 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
             }
             mapView.trackingMode = .followWithHeading // 트래킹 모드 활성화
         }// 선택했던 경로를 지도에 표시(polyline)
-        startNavigation()
     } // 모달창이 경로를 선택하면서 닫힐떄 호출되는 메소드
 
     func takeData(data: [Route]) {
@@ -387,8 +386,8 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
 
         locationManager.delegate = self
         locationManager.desiredAccuracy = kCLLocationAccuracyBestForNavigation // 최상의 정확도
-        locationManager.distanceFilter = 10 // 30미터마다 위치업데이트를 받음
-        locationManager.distanceFilter = kCLDistanceFilterNone // 미세한 움직임에 대한 피드백도 받음
+        locationManager.distanceFilter = 30 // 30미터마다 위치업데이트를 받음
+        //        locationManager.distanceFilter = kCLDistanceFilterNone // 미세한 움직임에 대한 피드백도 받음
 
 //        locationManager.requestWhenInUseAuthorization() // 위치 서비스 권한 요청(앱을 사용하고 있을떄만)
         locationManager.requestAlwaysAuthorization() // 백그라운드에서도 위치정보에 접근가능 권한 요청
@@ -408,21 +407,7 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
             mapView.animateTo(location: currentLocation) // 현재 위치로 지도의 위치를 옮긴다.
 
             print("Current coordinates: \(String(describing: currentLocation))") // 여기서 coordinate를 사용할 수 있습니다.
-            if isNavigationActive {
-                // 네비게이션 활성화 상태일 때만 실행
-                let distance = distanceFromPolyline()
-                print("떨어진 거리\(distance)")
-//                circle.map = nil
-                mapView.animateTo(zoom: 18)
 
-                let alert1 = UIAlertAction(title: "확인", style: .default)
-                if distance > 10 { // 10m 이상 경로를 벗어난다면
-                    setAlert(title: "경로 이탈", message: "경로를 벗어났습니다. 약 \(ceil(distance))m", actions: [alert1], on: self)
-                    print("경고문")
-                }
-                // 여기에 경로 계산 및 업데이트 로직 추가
-                // 예: calculateRoute(from: location.coordinate, to: destinationCoordinate)
-            }
 
         }
     }
@@ -438,7 +423,7 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
         case .authorizedWhenInUse, .authorizedAlways:
             // 권한이 승인되었을때
             print("권한 설정 완료")
-            mkView?.showsUserLocation = true // 사용자의 위치정보를 파란색 점으로 표시
+            userLocation?.showsUserLocation = true // 사용자의 위치정보를 파란색 점으로 표시
         case .notDetermined:
             print("권한 결정 안함")
             checkAuthoriztion()
@@ -473,20 +458,22 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
     func mapView(_ mapView: TMapView, doubleTapOnMap position: CLLocationCoordinate2D) {
         print("지도 더블 탭")
 
+        _ = TMapMarker(position: position)
+
         setMarker(position: position)
 
-//        let label2 = UILabel(frame: CGRect(x: 300, y: 500, width: 30, height: 50))
-//        label2.text = "우측"
-//        marker.rightCalloutView = label2
+        //        let label = UILabel(frame: CGRect(x: 0, y: 0, width: 30, height: 50))
+        //        label.text = "좌측"
+        //        marker.leftCalloutView = label
+        //        let label2 = UILabel(frame: CGRect(x: 0, y: 0, width: 30, height: 50))
+        //        label2.text = "우측"
+        //        marker.rightCalloutView = label2
     }
 
     func mapView(_ mapView: TMapView, tapOnMarker marker: TMapMarker) {
         print("마커 탭")
-//        self.view.addSubview(labelField)
-
         selectLocation = marker.position
         print("selectLocation latitude: \(String(describing: selectLocation?.latitude)), longitude: \(String(describing: selectLocation?.longitude))")
-
     }
 
 //    func mapView(_ mapView: TMapView, shouldChangeFrom oldPosition: CLLocationCoordinate2D, to newPosition: CLLocationCoordinate2D) -> Bool {
@@ -504,7 +491,6 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
                     marker.draggable = false
                     marker.title = result["fullAddress"] as? String
                     marker.subTitle = result["legalDong"] as? String
-
                     marker.setTapCallback { [weak self] _ in
                         guard let self = self else { return }
 
@@ -521,12 +507,12 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
                         currentCustomView = customView
                     }
                     print(result)
+
                     self.markers.append(marker)
                 }
             }
         }
     }
-
 
     func transitMarker() { // 대중교통 이용시 승차, 환승, 하차지역 정보 마커표시 메소드
         if modalLineData?.itinerary != nil {
@@ -595,23 +581,13 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
         self.polylines.removeAll()
     }
 
-    func SKTMapApikeySucceed() { // TMapTApiDelegate를 통해 callback을 받음.
+    func SKTMapApikeySucceed() { // TMapTapiDelegate를 통해 callback을 받음.
         print("APIKEY 인증 성공")
     }
 
     func SKTMapApikeyFailed(error: NSError?) {
         print("APIKEY 인증 실패")
     }
-
-    func startNavigation() {
-        isNavigationActive = true
-        // 추가적인 네비게이션 시작 로직
-    } // 네비게이션 시작 메소드
-
-    func stopNavigation() {
-        isNavigationActive = false
-        // 추가적인 네비게이션 종료 로직
-    } // 네비게이션 종료 메소드
 
     @objc func presentSideMenu() {
         // 메뉴 표시
@@ -624,6 +600,7 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
     }
 
     func initTableViewData() {
+        print("확인")
 
         guard let menuTableVC = menuTableViewController else { return }
 
@@ -635,7 +612,7 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
 
 
         // api
-        menuTableVC.menuItems.append(LeftMenuData(title: "11", onClick: {[weak self] in self?.objFunc51()}))
+        //            self.leftArray?.append(LeftMenuData(title: "자동완성", onClick: objFunc51))
         //            self.leftArray?.append(LeftMenuData(title: "BizCategory", onClick: objFunc52))
         menuTableVC.menuItems.append(LeftMenuData(title: "POI 검색", onClick: {[weak self] in self?.objFunc53()}))
         menuTableVC.menuItems.append(LeftMenuData(title: "POI 주변검색", onClick: {[weak self] in self?.objFunc54()}))
@@ -662,6 +639,7 @@ extension ViewController {
             clearMarkers()
             clearPolylines()
             mapView.removeFromSuperview() // 지도 삭제
+            addressTextField.removeFromSuperview() // 입력창 삭제
             searchButton.removeFromSuperview() // 검색 버튼 삭제
             menuButton.removeFromSuperview() // 메뉴 버튼 삭제
             routeButton.removeFromSuperview() // 경로탐색 버튼 삭제
@@ -697,17 +675,12 @@ extension ViewController {
         dismissSideMenu()
     }
 
-    public func objFunc51() {
-        dismissSideMenu()
-        mapView.perform(#selector(presentSideMenu))
-    }
-
     public func objFunc53() {
         self.clearMarkers()
         self.clearPolylines()
 
         let pathData = TMapPathData()
-        pathData.requestFindAllPOI("SK", count: 20) { (result, error)->Void in
+        pathData.requestFindAllPOI(addressTextField.text ?? "SK", count: 20) { (result, error)->Void in
             if let result = result {
                 DispatchQueue.main.async {
                     for poi in result {
@@ -731,7 +704,7 @@ extension ViewController {
 
         let pathData = TMapPathData()
 
-        pathData.requestFindAroundKeywordPOI(center, keywordName: "SK", radius: 500, count: 20, completion: { (result, error)->Void in
+        pathData.requestFindAroundKeywordPOI(center, keywordName: addressTextField.text ?? "SK", radius: 500, count: 20, completion: { (result, error)->Void in
             if let result = result {
                 DispatchQueue.main.async {
                     for poi in result {
@@ -740,6 +713,7 @@ extension ViewController {
                         marker.title = poi.name
                         self.markers.append(marker)
                         //                        self.mapView?.fitMapBoundsWithMarkers(self.markers)
+
                     }
                 }
             }
@@ -845,6 +819,8 @@ extension ViewController {
         clearMarkers()
         clearPolylines()
 
+        addressTextField.resignFirstResponder() // 키보드가 보이는 경우 숨깁니다
+
         mapView.trackingMode = .follow // 트래킹 모드 활성화
 
 //        startPoint = currentLocation!
@@ -889,54 +865,35 @@ extension ViewController {
         _ = TMapPolyline(coordinates: path)
     }
 
-    func distanceFromPolyline() -> CLLocationDistance {
-        var minDistance: CLLocationDistance = .greatestFiniteMagnitude
-
-        for polyline in polylines {
-            for i in 0..<(polyline.path.count - 1) {
-                let startPoint = polyline.path[i]
-                let endPoint = polyline.path[i + 1]
-
-                let distance = calculateDistanceFromPointToLineSegment(point: currentLocation, lineStart: startPoint, lineEnd: endPoint)
-                minDistance = min(minDistance, distance)
-            }
-        }
-
-        return minDistance
-    }
-
-    func distanceFromLineSegment(point: CLLocationCoordinate2D, start: [CLLocationCoordinate2D], end: [CLLocationCoordinate2D]) -> CLLocationDistance {
-        // 여기에 선분과 점 사이의 최소 거리를 계산하는 로직을 구현합니다.
-        // 이는 수학적인 계산이 필요하며, 선형 대수학을 사용하여 구현할 수 있습니다.
-        var minDistance: CLLocationDistance = .greatestFiniteMagnitude
-
-            for (startPoint, endPoint) in zip(start, end) {
-                let distance = calculateDistanceFromPointToLineSegment(point: point, lineStart: startPoint, lineEnd: endPoint)
-                minDistance = min(minDistance, distance)
-            }
-
-            return minDistance
-    }
-
-    private func calculateDistanceFromPointToLineSegment(point: CLLocationCoordinate2D, lineStart: CLLocationCoordinate2D, lineEnd: CLLocationCoordinate2D) -> CLLocationDistance {
-        // 여기에 선분과 점 사이의 최소 거리를 계산하는 로직을 구현합니다.
-        // 이는 수학적인 계산이 필요하며, 선형 대수학을 사용하여 구현할 수 있습니다.
-        let pointLocation = CLLocation(latitude: point.latitude, longitude: point.longitude)
-            let startLocation = CLLocation(latitude: lineStart.latitude, longitude: lineStart.longitude)
-            let endLocation = CLLocation(latitude: lineEnd.latitude, longitude: lineEnd.longitude)
-
-            // 선분의 끝점 사이의 거리를 계산
-            let lineLength = startLocation.distance(from: endLocation)
-            if lineLength < 0.000001 {
-                return pointLocation.distance(from: startLocation)
-            }
-
-            // 점과 선분 끝점 사이의 거리를 계산
-            let distanceToStart = pointLocation.distance(from: startLocation)
-            let distanceToEnd = pointLocation.distance(from: endLocation)
-
-        return min(distanceToStart, distanceToEnd)
-    }
+//    func checkUserIsOnRoute( _ currentLocation: CLLocationCoordinate2D) {
+//        // 현재 위치와 계산된 경로를 비교하여 사용자가 경로를 벗어났는지 확인
+//        guard let routePolyline = self.polylines.polyline else { return }
+//
+//        let polylineRenderer = MKPolylineRenderer(polyline: routePolyline)
+//        let currentPoint = MKMapPoint(currentLocation)
+//        let nearestPointOnRoute = polylineRenderer.point(for: currentPoint)
+//
+//        let distance = currentPoint.distance(to: nearestPointOnRoute)
+//
+//                // 일정 거리 이상 떨어졌는지 확인 (예: 50미터)
+//        if distance > 50 {
+//            // 사용자에게 알림 제공
+//            notifyUserOffRoute()
+//        }
+//        // 벗어났다면 경로를 재계산하거나 사용자에게 알림 제공
+//    }
+//
+//    func notifyUserOffRoute() {
+//        // 사용자에게 경로 이탈 알림 제공 (예: UIAlert, 음성 메시지 등)
+//
+//        MakingUI.setAlert(title: "경로 이탈", message: "경로에서 벗어났습니다. 경로를 재설정하시겠습니까?", actions: [confirm,], on: self)
+//        let alert = UIAlertController(title: "경로 이탈", message: "경로에서 벗어났습니다. 경로를 재설정하시겠습니까?", preferredStyle: .alert)
+//        let confirm = UIAlertAction(title: "재설정", style: .default, handler: { _ in
+//            // 경로 재설정 로직
+//        })
+//        alert.addAction(UIAlertAction(title: "취소", style: .cancel, handler: nil))
+//        self.present(alert, animated: true)
+//    }
 }
 
 protocol ModalDelegate: AnyObject { // 모달창에서 메소드를 공유하기 위한 Delegate
