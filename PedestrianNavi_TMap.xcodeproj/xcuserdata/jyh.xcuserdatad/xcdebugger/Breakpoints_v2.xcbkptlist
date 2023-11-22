@@ -64,6 +64,21 @@
                   endingLineNumber = "508"
                   offsetFromSymbolStart = "232">
                </Location>
+               <Location
+                  uuid = "35162CB4-2A05-4F5C-859E-4E0C9E15E6B3 - 721848ae8f18513d"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "PedestrianNavi_TMap.ViewController.transitMarker() -&gt; ()"
+                  moduleName = "PedestrianNavi_TMap"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/jyh/Development/Study_swift/PedestrianNavi_TMap/PedestrianNavi_TMap/View/ViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "505"
+                  endingLineNumber = "505"
+                  offsetFromSymbolStart = "2740">
+               </Location>
             </Locations>
          </BreakpointContent>
       </BreakpointProxy>
