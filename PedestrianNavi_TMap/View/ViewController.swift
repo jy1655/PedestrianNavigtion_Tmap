@@ -37,6 +37,7 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
     let userLocation: MKMapView? = nil // 사용자 위치표시용
     var modalData = [Route]()
     var modalLineData: Route?
+    var currentCustomView: MarkerUIView?
 
 
 
@@ -488,6 +489,21 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
                     marker.draggable = false
                     marker.title = result["fullAddress"] as? String
                     marker.subTitle = result["legalDong"] as? String
+                    marker.setTapCallback { [weak self] _ in
+                        guard let self = self else { return }
+
+                        let customView = MarkerUIView()
+
+                        // 기존 뷰 제거
+                        currentCustomView?.removeFromSuperview()
+
+                        // 새로운 뷰 생성 및 구성
+                        customView.createCalloutView()
+                        customView.configure(with: result, marker: marker)
+
+                        mapView.addSubview(customView)
+                        currentCustomView = customView
+                    }
                     print(result)
 
                     self.markers.append(marker)
