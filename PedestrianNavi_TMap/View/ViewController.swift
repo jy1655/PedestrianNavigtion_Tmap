@@ -38,7 +38,7 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
     var modalData = [Route]()
     var modalLineData: Route?
     var isNavigationActive: Bool = false
-    let customView = MarkerUIView()
+    var currentCustomView: MarkerUIView? // 현재 표시된 MarkerUIView
 
 
 
@@ -458,7 +458,7 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
     func mapView(_ mapView: TMapView, singleTapOnMap location: CLLocationCoordinate2D) {
         print("싱글탭")
 
-        customView.removeFromSuperview()
+        currentCustomView?.removeFromSuperview()
         view.endEditing(true) // 키보드가 올라와 있었다면 내린다.
     }
 
@@ -504,20 +504,21 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
                     marker.draggable = false
                     marker.title = result["fullAddress"] as? String
                     marker.subTitle = result["legalDong"] as? String
-                    
+
                     marker.setTapCallback { [weak self] _ in
                         guard let self = self else { return }
 
+                        let customView = MarkerUIView()
+
                         // 기존 뷰 제거
-//                        customView.removeFromSuperview()
+                        currentCustomView?.removeFromSuperview()
 
                         // 새로운 뷰 생성 및 구성
-                        customView.configureView() // 뷰의 크기 및 위치 설정
-
                         customView.createCalloutView()
-                        customView.configure(with: result)
+                        customView.configure(with: result, marker: marker)
 
                         mapView.addSubview(customView)
+                        currentCustomView = customView
                     }
                     print(result)
                     self.markers.append(marker)
@@ -594,7 +595,7 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
         self.polylines.removeAll()
     }
 
-    func SKTMapApikeySucceed() { // TMapTapiDelegate를 통해 callback을 받음.
+    func SKTMapApikeySucceed() { // TMapTApiDelegate를 통해 callback을 받음.
         print("APIKEY 인증 성공")
     }
 
@@ -739,7 +740,6 @@ extension ViewController {
                         marker.title = poi.name
                         self.markers.append(marker)
                         //                        self.mapView?.fitMapBoundsWithMarkers(self.markers)
-
                     }
                 }
             }

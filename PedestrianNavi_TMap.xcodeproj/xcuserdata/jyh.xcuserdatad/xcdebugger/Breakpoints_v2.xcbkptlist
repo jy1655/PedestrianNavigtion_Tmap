@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Bucket
+   uuid = "1AC59837-7F7D-4157-A243-BEB8D0B94F61"
+   type = "1"
+   version = "2.0">
+   <Breakpoints>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "35162CB4-2A05-4F5C-859E-4E0C9E15E6B3"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "PedestrianNavi_TMap/View/ViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "505"
+            endingLineNumber = "505"
+            landmarkName = "setMarker(position:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "35162CB4-2A05-4F5C-859E-4E0C9E15E6B3 - 88bfb5163ede7ad3"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 @Swift.MainActor () -&gt; () in closure #1 (Swift.Optional&lt;Swift.Dictionary&lt;Swift.String, Any&gt;&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in PedestrianNavi_TMap.ViewController.setMarker(position: __C.CLLocationCoordinate2D) -&gt; ()"
+                  moduleName = "PedestrianNavi_TMap"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/jyh/Development/Study_swift/PedestrianNavi_TMap/PedestrianNavi_TMap/View/ViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "505"
+                  endingLineNumber = "505"
+                  offsetFromSymbolStart = "212">
+               </Location>
+               <Location
+                  uuid = "35162CB4-2A05-4F5C-859E-4E0C9E15E6B3 - 88bfb5163ede7af0"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 @Swift.MainActor () -&gt; () in closure #1 (Swift.Optional&lt;Swift.Dictionary&lt;Swift.String, Any&gt;&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in PedestrianNavi_TMap.ViewController.setMarker(position: __C.CLLocationCoordinate2D) -&gt; ()"
+                  moduleName = "PedestrianNavi_TMap"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/jyh/Development/Study_swift/PedestrianNavi_TMap/PedestrianNavi_TMap/View/ViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "506"
+                  endingLineNumber = "506"
+                  offsetFromSymbolStart = "200">
+               </Location>
+               <Location
+                  uuid = "35162CB4-2A05-4F5C-859E-4E0C9E15E6B3 - 88bfb5163ede7936"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 @Swift.MainActor () -&gt; () in closure #1 (Swift.Optional&lt;Swift.Dictionary&lt;Swift.String, Any&gt;&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in PedestrianNavi_TMap.ViewController.setMarker(position: __C.CLLocationCoordinate2D) -&gt; ()"
+                  moduleName = "PedestrianNavi_TMap"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/jyh/Development/Study_swift/PedestrianNavi_TMap/PedestrianNavi_TMap/View/ViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "508"
+                  endingLineNumber = "508"
+                  offsetFromSymbolStart = "232">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "24FACE13-EF30-4EFD-BAC7-E817ECA1C56A"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "PedestrianNavi_TMap/View/ViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "507"
+            endingLineNumber = "507"
+            landmarkName = "setMarker(position:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "24FACE13-EF30-4EFD-BAC7-E817ECA1C56A - 88bfb5163ede7936"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 @Swift.MainActor () -&gt; () in closure #1 (Swift.Optional&lt;Swift.Dictionary&lt;Swift.String, Any&gt;&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in PedestrianNavi_TMap.ViewController.setMarker(position: __C.CLLocationCoordinate2D) -&gt; ()"
+                  moduleName = "PedestrianNavi_TMap"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/jyh/Development/Study_swift/PedestrianNavi_TMap/PedestrianNavi_TMap/View/ViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "508"
+                  endingLineNumber = "508"
+                  offsetFromSymbolStart = "504">
+               </Location>
+               <Location
+                  uuid = "24FACE13-EF30-4EFD-BAC7-E817ECA1C56A - 6d72021db90fe96f"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (TMapSDK.TMapMarker) -&gt; () in closure #1 @Swift.MainActor () -&gt; () in closure #1 (Swift.Optional&lt;Swift.Dictionary&lt;Swift.String, Any&gt;&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in PedestrianNavi_TMap.ViewController.setMarker(position: __C.CLLocationCoordinate2D) -&gt; ()"
+                  moduleName = "PedestrianNavi_TMap"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/jyh/Development/Study_swift/PedestrianNavi_TMap/PedestrianNavi_TMap/View/ViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "508"
+                  endingLineNumber = "508"
+                  offsetFromSymbolStart = "100">
+               </Location>
+               <Location
+                  uuid = "24FACE13-EF30-4EFD-BAC7-E817ECA1C56A - 88bfb5163ede7936"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 @Swift.MainActor () -&gt; () in closure #1 (Swift.Optional&lt;Swift.Dictionary&lt;Swift.String, Any&gt;&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in PedestrianNavi_TMap.ViewController.setMarker(position: __C.CLLocationCoordinate2D) -&gt; ()"
+                  moduleName = "PedestrianNavi_TMap"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/jyh/Development/Study_swift/PedestrianNavi_TMap/PedestrianNavi_TMap/View/ViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "508"
+                  endingLineNumber = "508"
+                  offsetFromSymbolStart = "232">
+               </Location>
+               <Location
+                  uuid = "24FACE13-EF30-4EFD-BAC7-E817ECA1C56A - 88bfb5163ede7936"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 @Swift.MainActor () -&gt; () in closure #1 (Swift.Optional&lt;Swift.Dictionary&lt;Swift.String, Any&gt;&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in PedestrianNavi_TMap.ViewController.setMarker(position: __C.CLLocationCoordinate2D) -&gt; ()"
+                  moduleName = "PedestrianNavi_TMap"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/jyh/Development/Study_swift/PedestrianNavi_TMap/PedestrianNavi_TMap/View/ViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "508"
+                  endingLineNumber = "508"
+                  offsetFromSymbolStart = "764">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "8747ADE7-E777-493F-9545-AC55B4BD8A35"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "PedestrianNavi_TMap/View/ViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "491"
+            endingLineNumber = "491"
+            landmarkName = "ViewController"
+            landmarkType = "3">
+         </BreakpointContent>
+      </BreakpointProxy>
+   </Breakpoints>
+</Bucket>
