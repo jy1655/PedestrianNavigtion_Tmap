@@ -5,6 +5,13 @@
 //  Created by 황재영 on 11/10/23.
 //
 
+//
+//  ViewController.swift
+//  PedestrianNavi_TMap
+//
+//  Created by 황재영 on 11/10/23.
+//
+
 import UIKit
 import TMapSDK
 import CoreLocation
@@ -38,10 +45,7 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
     var modalData = [Route]()
     var modalLineData: Route?
     var currentCustomView: MarkerUIView?
-<<<<<<< HEAD
     var isNavigationActive = false
-=======
->>>>>>> dc8d375 (test)
 
 
 
