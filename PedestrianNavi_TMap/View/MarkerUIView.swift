@@ -38,12 +38,12 @@ class MarkerUIView: UIView {
     }
 
     func configure(with data: [String: Any], marker: TMapMarker) {
-        // 데이터를 사용하여 뷰의 내용을 업데이트합니다.
-//        let text = data.map { (key, value) -> String in
-//            return "\(key): \(value)"
-//        }.joined(separator: "\n") // 각 쌍을 줄바꿈 문자로 구분
+//         데이터를 사용하여 뷰의 내용을 업데이트합니다.
+        let text = data.map { (key, value) -> String in
+            return "\(key): \(value)"
+        }.joined(separator: "\n") // 각 쌍을 줄바꿈 문자로 구분
 
-//        labelField.text = data.description as String
+        labelField.text = data.description as String
         // 마커와 UIView를 연동시키기
         self.associatedMarker = marker
     }
