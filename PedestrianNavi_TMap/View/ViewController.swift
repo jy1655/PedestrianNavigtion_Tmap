@@ -37,6 +37,7 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
     let userLocation: MKMapView? = nil // 사용자 위치표시용
     var modalData = [Route]()
     var modalLineData: Route?
+    var currentCustomView: MarkerUIView?
 
 
 
@@ -195,14 +196,14 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
     func setUpUI() {
 
         // 검색 버튼 설정
-        searchButton = MakingUI.setButton(title: "검색", selector: #selector(searchLocationModal))
+        searchButton = setButton(title: "검색", selector: #selector(searchLocationModal))
         self.view.addSubview(searchButton)
 
         //        // 메뉴 버튼 설정
-        menuButton = MakingUI.setButton(title: "Menu", selector: #selector(presentSideMenu))
+        menuButton = setButton(title: "Menu", selector: #selector(presentSideMenu))
         self.view.addSubview(menuButton)
         // 경로 탐색 버튼 설정
-        routeButton = MakingUI.setButton(title: "경로 탐색", selector: #selector(requestRoute))
+        routeButton = setButton(title: "경로 탐색", selector: #selector(requestRoute))
         view.addSubview(routeButton)
 //        self.view.addSubview(routeButton)
 
@@ -343,7 +344,7 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
 
         if gpsStatus == "NO_SIGNAL" {
             print("GPS 신호 없음")
-            MakingUI.setAlert(title: "GPS 오류!", message: "GPS 신호가 없습니다!", actions: [action1], on: self)
+            setAlert(title: "GPS 오류!", message: "GPS 신호가 없습니다!", actions: [action1], on: self)
         } else if gpsStatus == "BAD" {
             print("GPS 신호가 약합니다")
         } else if gpsStatus == "TUNNEL" {
@@ -372,7 +373,7 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
         }
 
         if status == .denied || status == .restricted {
-            MakingUI.setAlert(title: "권한 필요", message: "위치 서비스 권한이 필요합니다. 위치 서비스 권한 제한시 앱이 종료됩니다.", actions: [logOkAction, logNoAction], on: self)
+            setAlert(title: "권한 필요", message: "위치 서비스 권한이 필요합니다. 위치 서비스 권한 제한시 앱이 종료됩니다.", actions: [logOkAction, logNoAction], on: self)
 
         }
     }
@@ -406,8 +407,8 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
             mapView.animateTo(location: currentLocation) // 현재 위치로 지도의 위치를 옮긴다.
 
             print("Current coordinates: \(String(describing: currentLocation))") // 여기서 coordinate를 사용할 수 있습니다.
-            
-            
+
+
         }
     }
 
@@ -441,6 +442,8 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
 
     func mapView(_ mapView: TMapView, singleTapOnMap location: CLLocationCoordinate2D) {
         print("싱글탭")
+
+        currentCustomView?.removeFromSuperview()
         view.endEditing(true) // 키보드가 올라와 있었다면 내린다.
     }
 
@@ -488,6 +491,21 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
                     marker.draggable = false
                     marker.title = result["fullAddress"] as? String
                     marker.subTitle = result["legalDong"] as? String
+                    marker.setTapCallback { [weak self] _ in
+                        guard let self = self else { return }
+
+                        let customView = MarkerUIView()
+
+                        // 기존 뷰 제거
+                        currentCustomView?.removeFromSuperview()
+
+                        // 새로운 뷰 생성 및 구성
+                        customView.createCalloutView()
+                        customView.configure(with: result, marker: marker)
+
+                        mapView.addSubview(customView)
+                        currentCustomView = customView
+                    }
                     print(result)
 
                     self.markers.append(marker)
