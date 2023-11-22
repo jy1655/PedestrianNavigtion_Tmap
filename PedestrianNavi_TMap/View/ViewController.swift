@@ -496,7 +496,7 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
 //    }
 
     func setMarker(position: CLLocationCoordinate2D) { // 마커 생성시 리버스지오코딩으로 주소 가져오기
-        pathData.reguverseGeocoding(position, addressType: "A02") {(result, error) in
+        pathData.readd verseGeocoding(position, addressType: "A02") {(result, error) in
             if let result = result {
                 DispatchQueue.main.async {
                     let marker = TMapMarker(position: position)
