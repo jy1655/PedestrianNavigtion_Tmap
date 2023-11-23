@@ -9,9 +9,15 @@ import UIKit
 import TMapSDK
 
 class MarkerUIView: UIView {
+
+    weak var delegate: ModalDelegate?
     var labelField = UILabel()
     var deleteButton = UIButton()
+    var viewDownButton = UIButton()
+    var navigationButton = UIButton()
     var associatedMarker: TMapMarker? // 연관된 마커에 대한 참조
+    var markerLocation: CLLocationCoordinate2D?
+
 
     func createCalloutView() {
         print("콜아웃 뷰 만들기")
@@ -34,22 +40,41 @@ class MarkerUIView: UIView {
         deleteButton.addTarget(self, action: #selector(deleteMarkerAndView), for: .touchUpInside)
         self.addSubview(deleteButton)
 
+        viewDownButton.frame = CGRect(x: 0, y: 0 , width: 15, height: 15) // 적절한 위치 및 크기 설정
+        viewDownButton.setTitle("X", for: .normal)
+        viewDownButton.backgroundColor = .black
+        viewDownButton.addTarget(self, action: #selector(shutdownView), for: .touchUpInside)
+        self.addSubview(viewDownButton)
+
+        navigationButton.frame = CGRect(x: 120, y: 470, width: 100, height: 30) // 적절한 위치 및 크기 설정
+        navigationButton.setTitle("경로 검색", for: .normal)
+        navigationButton.backgroundColor = .black
+        navigationButton.addTarget(self, action: #selector(navigationstart), for: .touchUpInside)
+        self.addSubview(navigationButton)
     }
 
     func configure(with data: [String: Any], marker: TMapMarker) {
 //         데이터를 사용하여 뷰의 내용을 업데이트합니다.
-        let text = data.map { (key, value) -> String in
-            return "\(key): \(value)"
-        }.joined(separator: "\n") // 각 쌍을 줄바꿈 문자로 구분
 
         labelField.text = data.description as String
         // 마커와 UIView를 연동시키기
         self.associatedMarker = marker
+        self.markerLocation = marker.position
+    }
+
+
+    @objc func shutdownView() { // 창만 종료하기(마커유지)
+        self.removeFromSuperview()
     }
 
     @objc func deleteMarkerAndView() { // 자폭시퀸스
         associatedMarker?.map = nil // 마커 제거
         self.removeFromSuperview() // 뷰 제거
+    }
+
+    @objc func navigationstart() { // 마커좌표를 도착지점으로 하여
+        self.removeFromSuperview() // 뷰 제거
+        delegate?.modalViewDidDisappear()
     }
 
 }

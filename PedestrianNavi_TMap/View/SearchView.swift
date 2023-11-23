@@ -56,7 +56,7 @@ class SearchView: UIViewController, UITableViewDataSource, UITableViewDelegate {
 
     func setupUI() {
         // 출발지 텍스트 필드 설정
-        departureTextField.placeholder = "출발지 입력"
+        departureTextField.placeholder = "출발지 입력(현재 위치)"
         departureTextField.borderStyle = .roundedRect
 
         // 목적지 텍스트 필드 설정

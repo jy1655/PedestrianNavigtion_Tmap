@@ -268,7 +268,6 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
         print("경로를 표시해야할 데이터: \(String(describing: modalLineData))")
 
         if modalLineData != nil {
-            stopNavigation()
 
             clearMarkers()
             clearPolylines()
