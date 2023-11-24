@@ -115,7 +115,7 @@ struct CallRestAPI {
         task.resume()
     }
 
-    func transitSubRoute(completion: @escaping (Result<Data, Error>) -> Void) {
+    func transitSubRoute(completion: @escaping (Result<Data, Error>) -> Void) { // transit중에서 간략한 정보만 보내주는 API
         let urlStringTS = "https://apis.openapi.sk.com/transit/routes/sub" // 대중교통 경로요청 API URL
 
         guard let url = URL(string: urlStringTS) else {
