@@ -400,6 +400,7 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
             }
 
             currentLocation = CLLocationCoordinate2D(latitude: latitude, longitude: longitude) // CLLocationCoordinate2D로 변환
+            updateLocation(newLocation: currentLocation)
 
             mapView.animateTo(location: currentLocation) // 현재 위치로 지도의 위치를 옮긴다.
 
@@ -960,17 +961,21 @@ extension ViewController {
         return pointLocation.distance(from: closestLocation)
     }
 
-
+    func updateLocation(newLocation: CLLocationCoordinate2D) {
+            self.currentLocation = newLocation
+        }
 
 
 }
 
 
 protocol ModalDelegate: AnyObject { // 모달창에서 메소드를 공유하기 위한 Delegate
-//    func transit(startPoint: CLLocationCoordinate2D, endPoint: CLLocationCoordinate2D?)
+    var currentLocation: CLLocationCoordinate2D! { get set }
+    //    func transit(startPoint: CLLocationCoordinate2D, endPoint: CLLocationCoordinate2D?)
     func modalViewDidDisappear()
     func takeData(data: [Route])
     func pedestrianAPICall(startPoint: CLLocationCoordinate2D, endPoint: CLLocationCoordinate2D)
     func transitAPICall(startPoint: CLLocationCoordinate2D, endPoint: CLLocationCoordinate2D)
+    func updateLocation(newLocation: CLLocationCoordinate2D)
 }
 

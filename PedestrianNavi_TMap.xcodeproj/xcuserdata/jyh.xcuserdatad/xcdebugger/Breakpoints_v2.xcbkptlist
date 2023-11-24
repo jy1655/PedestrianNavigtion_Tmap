@@ -14,42 +14,10 @@
             filePath = "PedestrianNavi_TMap/View/ViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "598"
-            endingLineNumber = "598"
-            landmarkName = "pedestrianAPICall(startPoint:endPoint:)"
+            startingLineNumber = "599"
+            endingLineNumber = "599"
+            landmarkName = "transitAPICall(startPoint:endPoint:)"
             landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "EF61779C-2E0F-42EC-BB32-C5F3F45854C9 - 88200cd61eb515ae"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "PedestrianNavi_TMap.ViewController.clearMarkers() -&gt; ()"
-                  moduleName = "PedestrianNavi_TMap"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/jyh/Development/Study_swift/PedestrianNavi_TMap/PedestrianNavi_TMap/View/ViewController.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "598"
-                  endingLineNumber = "598"
-                  offsetFromSymbolStart = "384">
-               </Location>
-               <Location
-                  uuid = "EF61779C-2E0F-42EC-BB32-C5F3F45854C9 - c91ed6fcafc79c44"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "PedestrianNavi_TMap.ViewController.transitAPICall(startPoint: __C.CLLocationCoordinate2D, endPoint: __C.CLLocationCoordinate2D) -&gt; ()"
-                  moduleName = "PedestrianNavi_TMap"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/jyh/Development/Study_swift/PedestrianNavi_TMap/PedestrianNavi_TMap/View/ViewController.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "600"
-                  endingLineNumber = "600"
-                  offsetFromSymbolStart = "108">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -62,42 +30,10 @@
             filePath = "PedestrianNavi_TMap/View/ViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "565"
-            endingLineNumber = "565"
-            landmarkName = "transitMarker()"
+            startingLineNumber = "566"
+            endingLineNumber = "566"
+            landmarkName = "pedestrianAPICall(startPoint:endPoint:)"
             landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "511F5B14-22A4-4152-8ADD-48FF844A0D9D - f8fda8a441b82052"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #1 @Swift.MainActor () -&gt; () in PedestrianNavi_TMap.ViewController.transitMarker() -&gt; ()"
-                  moduleName = "PedestrianNavi_TMap"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/jyh/Development/Study_swift/PedestrianNavi_TMap/PedestrianNavi_TMap/View/ViewController.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "565"
-                  endingLineNumber = "565"
-                  offsetFromSymbolStart = "272">
-               </Location>
-               <Location
-                  uuid = "511F5B14-22A4-4152-8ADD-48FF844A0D9D - 5a08e746cb1302a9"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "PedestrianNavi_TMap.ViewController.pedestrianAPICall(startPoint: __C.CLLocationCoordinate2D, endPoint: __C.CLLocationCoordinate2D) -&gt; ()"
-                  moduleName = "PedestrianNavi_TMap"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/jyh/Development/Study_swift/PedestrianNavi_TMap/PedestrianNavi_TMap/View/ViewController.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "567"
-                  endingLineNumber = "567"
-                  offsetFromSymbolStart = "108">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -114,6 +50,38 @@
             endingLineNumber = "83"
             landmarkName = "requestRoute()"
             landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "4B185EE9-DFBE-4996-84DA-3229459313E7 - 994bd76144788901"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "PedestrianNavi_TMap.ViewController.requestRoute() -&gt; ()"
+                  moduleName = "PedestrianNavi_TMap"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/jyh/Development/Study_swift/PedestrianNavi_TMap/PedestrianNavi_TMap/View/ViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "85"
+                  endingLineNumber = "85"
+                  offsetFromSymbolStart = "332">
+               </Location>
+               <Location
+                  uuid = "4B185EE9-DFBE-4996-84DA-3229459313E7 - 994bd76144788920"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "PedestrianNavi_TMap.ViewController.requestRoute() -&gt; ()"
+                  moduleName = "PedestrianNavi_TMap"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/jyh/Development/Study_swift/PedestrianNavi_TMap/PedestrianNavi_TMap/View/ViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "84"
+                  endingLineNumber = "84"
+                  offsetFromSymbolStart = "332">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -126,42 +94,10 @@
             filePath = "PedestrianNavi_TMap/View/ViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "889"
-            endingLineNumber = "889"
+            startingLineNumber = "890"
+            endingLineNumber = "890"
             landmarkName = "transit(startPoint:endPoint:)"
             landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "EE866646-E50F-40E8-8118-F5F0C593DE03 - 76e665bd23cb2bfe"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #1 (Swift.Result&lt;Foundation.Data, Swift.Error&gt;) -&gt; () in PedestrianNavi_TMap.ViewController.transit(startPoint: __C.CLLocationCoordinate2D, endPoint: Swift.Optional&lt;__C.CLLocationCoordinate2D&gt;) -&gt; ()"
-                  moduleName = "PedestrianNavi_TMap"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/jyh/Development/Study_swift/PedestrianNavi_TMap/PedestrianNavi_TMap/View/ViewController.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "889"
-                  endingLineNumber = "889"
-                  offsetFromSymbolStart = "2368">
-               </Location>
-               <Location
-                  uuid = "EE866646-E50F-40E8-8118-F5F0C593DE03 - 4a5a0587fd17839f"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "PedestrianNavi_TMap.ViewController.transit(startPoint: __C.CLLocationCoordinate2D, endPoint: Swift.Optional&lt;__C.CLLocationCoordinate2D&gt;) -&gt; ()"
-                  moduleName = "PedestrianNavi_TMap"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/jyh/Development/Study_swift/PedestrianNavi_TMap/PedestrianNavi_TMap/View/ViewController.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "890"
-                  endingLineNumber = "890"
-                  offsetFromSymbolStart = "324">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -174,42 +110,10 @@
             filePath = "PedestrianNavi_TMap/View/ViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "901"
-            endingLineNumber = "901"
+            startingLineNumber = "902"
+            endingLineNumber = "902"
             landmarkName = "transit(startPoint:endPoint:)"
             landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "86819709-1911-4451-87C3-8C824607B1EA - 4a5a0587fd178c20"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "PedestrianNavi_TMap.ViewController.transit(startPoint: __C.CLLocationCoordinate2D, endPoint: Swift.Optional&lt;__C.CLLocationCoordinate2D&gt;) -&gt; ()"
-                  moduleName = "PedestrianNavi_TMap"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/jyh/Development/Study_swift/PedestrianNavi_TMap/PedestrianNavi_TMap/View/ViewController.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "901"
-                  endingLineNumber = "901"
-                  offsetFromSymbolStart = "1372">
-               </Location>
-               <Location
-                  uuid = "86819709-1911-4451-87C3-8C824607B1EA - 4a5a0587fd178c20"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "PedestrianNavi_TMap.ViewController.transit(startPoint: __C.CLLocationCoordinate2D, endPoint: Swift.Optional&lt;__C.CLLocationCoordinate2D&gt;) -&gt; ()"
-                  moduleName = "PedestrianNavi_TMap"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/jyh/Development/Study_swift/PedestrianNavi_TMap/PedestrianNavi_TMap/View/ViewController.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "901"
-                  endingLineNumber = "901"
-                  offsetFromSymbolStart = "704">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>
