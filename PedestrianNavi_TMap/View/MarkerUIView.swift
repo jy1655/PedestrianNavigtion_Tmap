@@ -47,9 +47,9 @@ class MarkerUIView: UIView {
         self.addSubview(viewDownButton)
 
         navigationButton.frame = CGRect(x: 120, y: 470, width: 100, height: 30) // 적절한 위치 및 크기 설정
-        navigationButton.setTitle("경로 검색", for: .normal)
+        navigationButton.setTitle("목적지로 설정", for: .normal)
         navigationButton.backgroundColor = .black
-        navigationButton.addTarget(self, action: #selector(navigationStart), for: .touchUpInside)
+        navigationButton.addTarget(self, action: #selector(searchLocationModal), for: .touchUpInside)
         self.addSubview(navigationButton)
     }
 
@@ -72,14 +72,18 @@ class MarkerUIView: UIView {
         self.removeFromSuperview() // 뷰 제거
     }
 
-    @objc func navigationStart() { // 마커좌표를 도착지점으로 하여
-        let viewController = ViewController()
-        delegate = viewController
-        self.removeFromSuperview() // 뷰 제거
-        print(delegate?.currentLocation ?? "값이 없음")
-        print(markerLocation ?? "알수 없음")
-        delegate?.pedestrianAPICall(startPoint: (delegate?.currentLocation)!, endPoint: markerLocation!)
+//    @objc func navigationStart() { // 마커좌표를 도착지점으로 하여
+//
+//        self.removeFromSuperview() // 뷰 제거
+//        print(delegate?.currentLocation ?? "값이 없음")
+//        print(markerLocation ?? "알수 없음")
+//        delegate?.requestRoute()
+//    }
 
+    @objc func searchLocationModal() {
+        self.removeFromSuperview() // 뷰 제거
+        print((delegate?.selectLocation)!)
+        delegate?.searchLocationModal() // 모달 열기
     }
 
 }

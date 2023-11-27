@@ -99,7 +99,7 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
         path.append(startPoint)
         path.append(endPoint)
 
-        _ = TMapPolyline(coordinates: path)
+//        _ = TMapPolyline(coordinates: path)
 
         let pathType = TMapPathType.PEDESTRIAN_PATH
 
@@ -110,6 +110,7 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
                 // 에러 처리
                 print("Error: \(error.localizedDescription)")
             } else if let polyline = result {
+
                 // 경로 데이터 사용
                 print("Path data received")
                 DispatchQueue.main.async { // UI 업데이트는 메인 스레드에서 수행합니다.
@@ -124,6 +125,7 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
                     self.markers.append(marker2)
 
                     polyline.map = self.mapView
+                    polyline.strokeColor = MakingUI.colorWithHexString(hexString: "000000") // 네비용 폴리선을 검은색으로
                     self.mapView.fitMapBoundsWithPolylines([polyline])
                     self.polylines.append(polyline)
                 }
@@ -493,6 +495,7 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
                         guard let self = self else { return }
 
                         let customView = MarkerUIView()
+                        customView.delegate = self
 
                         // 기존 뷰 제거
                         currentCustomView?.removeFromSuperview()
@@ -574,26 +577,43 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
         routeRequest.fetchRoute { result in
             switch result {
             case .success(let data):
-                // 성공적으로 데이터를 받았을 때 처리
                 do {
-                    // JSON 데이터를 딕셔너리로 변환
-                    if let jsonObject = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
-                        // JSON 데이터를 이쁘게 출력하기 위해 JSONSerialization을 사용
-                        let prettyJsonData = try JSONSerialization.data(withJSONObject: jsonObject, options: .prettyPrinted)
-                        // 이쁘게 만든 JSON 데이터를 문자열로 변환
-                        if let prettyPrintedString = String(data: prettyJsonData, encoding: .utf8) {
-                            // 이쁘게 만든 문자열을 콘솔에 출력
-                            print(prettyPrintedString)
-                        }
-                    }
+                    // JSON 데이터를 PedestrianData으로 디코딩
+                    let pedestrianData = try JSONDecoder().decode(PedestrianData.self, from: data)
+                    // featureCollection 처리
+                    print(pedestrianData)
                 } catch {
-                    print("JSON 파싱 에러: \(error)")
+                    print("JSON 디코딩 에러: \(error)")
                 }
+
             case .failure(let error):
-                // 오류가 발생했을 때 처리
-                print(error.localizedDescription)
+                print("API 호출 오류: \(error.localizedDescription)")
             }
         }
+
+//        routeRequest.fetchRoute { result in
+//            switch result {
+//            case .success(let data):
+//                // 성공적으로 데이터를 받았을 때 처리
+//                do {
+//                    // JSON 데이터를 딕셔너리로 변환
+//                    if let jsonObject = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
+//                        // JSON 데이터를 이쁘게 출력하기 위해 JSONSerialization을 사용
+//                        let prettyJsonData = try JSONSerialization.data(withJSONObject: jsonObject, options: .prettyPrinted)
+//                        // 이쁘게 만든 JSON 데이터를 문자열로 변환
+//                        if let prettyPrintedString = String(data: prettyJsonData, encoding: .utf8) {
+//                            // 이쁘게 만든 문자열을 콘솔에 출력
+//                            print(prettyPrintedString)
+//                        }
+//                    }
+//                } catch {
+//                    print("JSON 파싱 에러: \(error)")
+//                }
+//            case .failure(let error):
+//                // 오류가 발생했을 때 처리
+//                print(error.localizedDescription)
+//            }
+//        }
     }
 
     func transitAPICall(startPoint: CLLocationCoordinate2D, endPoint: CLLocationCoordinate2D) {
@@ -607,26 +627,43 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
         transitRequest.transitRoute { result in
             switch result {
             case .success(let data):
-                // 성공적으로 데이터를 받았을 때 처리
                 do {
-                    // JSON 데이터를 딕셔너리로 변환
-                    if let jsonObject = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
-                        // JSON 데이터를 이쁘게 출력하기 위해 JSONSerialization을 사용
-                        let prettyJsonData = try JSONSerialization.data(withJSONObject: jsonObject, options: .prettyPrinted)
-                        // 이쁘게 만든 JSON 데이터를 문자열로 변환
-                        if let prettyPrintedString = String(data: prettyJsonData, encoding: .utf8) {
-                            // 이쁘게 만든 문자열을 콘솔에 출력
-                            print(prettyPrintedString)
-                        }
-                    }
+                    // JSON 데이터를 PedestrianData으로 디코딩
+                    let transitData = try JSONDecoder().decode(TransitData.self, from: data)
+                    // featureCollection 처리
+                    print(transitData)
                 } catch {
-                    print("JSON 파싱 에러: \(error)")
+                    print("JSON 디코딩 에러: \(error)")
                 }
+
             case .failure(let error):
-                // 오류가 발생했을 때 처리
-                print(error.localizedDescription)
+                print("API 호출 오류: \(error.localizedDescription)")
             }
         }
+
+//        transitRequest.transitRoute { result in
+//            switch result {
+//            case .success(let data):
+//                // 성공적으로 데이터를 받았을 때 처리
+//                do {
+//                    // JSON 데이터를 딕셔너리로 변환
+//                    if let jsonObject = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
+//                        // JSON 데이터를 이쁘게 출력하기 위해 JSONSerialization을 사용
+//                        let prettyJsonData = try JSONSerialization.data(withJSONObject: jsonObject, options: .prettyPrinted)
+//                        // 이쁘게 만든 JSON 데이터를 문자열로 변환
+//                        if let prettyPrintedString = String(data: prettyJsonData, encoding: .utf8) {
+//                            // 이쁘게 만든 문자열을 콘솔에 출력
+//                            print(prettyPrintedString)
+//                        }
+//                    }
+//                } catch {
+//                    print("JSON 파싱 에러: \(error)")
+//                }
+//            case .failure(let error):
+//                // 오류가 발생했을 때 처리
+//                print(error.localizedDescription)
+//            }
+//        }
     }
 
     func clearMarkers() { // 마커 지우기
@@ -971,11 +1008,14 @@ extension ViewController {
 
 protocol ModalDelegate: AnyObject { // 모달창에서 메소드를 공유하기 위한 Delegate
     var currentLocation: CLLocationCoordinate2D! { get set }
+    var selectLocation: CLLocationCoordinate2D? { get set }
     //    func transit(startPoint: CLLocationCoordinate2D, endPoint: CLLocationCoordinate2D?)
     func modalViewDidDisappear()
     func takeData(data: [Route])
     func pedestrianAPICall(startPoint: CLLocationCoordinate2D, endPoint: CLLocationCoordinate2D)
     func transitAPICall(startPoint: CLLocationCoordinate2D, endPoint: CLLocationCoordinate2D)
     func updateLocation(newLocation: CLLocationCoordinate2D)
+    func requestRoute()
+    func searchLocationModal()
 }
 

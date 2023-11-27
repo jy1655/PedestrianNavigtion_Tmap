@@ -56,11 +56,11 @@ class SearchView: UIViewController, UITableViewDataSource, UITableViewDelegate {
 
     func setupUI() {
         // 출발지 텍스트 필드 설정
-        departureTextField.placeholder = "출발지 입력(현재 위치)"
+        departureTextField.placeholder = "출발지 입력(현재 위치: \(String(describing: (delegate?.currentLocation)!))" // 나중에 리버스 지오코딩으로 지명 가져오는 걸로 변경하기
         departureTextField.borderStyle = .roundedRect
 
         // 목적지 텍스트 필드 설정
-        destinationTextField.placeholder = "목적지 입력"
+        destinationTextField.placeholder = "목적지 \(String(describing:(delegate?.selectLocation)!))" // 나중에 리버스 지오코딩으로 지명 가져오는 걸로 변경하기
         destinationTextField.borderStyle = .roundedRect
 
         // 검색 버튼 설정
@@ -130,14 +130,14 @@ class SearchView: UIViewController, UITableViewDataSource, UITableViewDelegate {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) // "RouteCell"을 "cell"로 수정
         let route = routes[indexPath.row]
         // 셀의 내용을 설정할 때 실제 경로 데이터를 반영
-        cell.textLabel?.text = "약 \(route.itinerary.totalTime/60)분 소요, Transfers: \(route.itinerary.transferCount)회, 요금 \(route.itinerary.fare.regular.totalFare)원"
+        cell.textLabel?.text = "약 \((route.itinerary?.totalTime)!/60)분 소요, Transfers: \((route.itinerary?.transferCount)!)회, 요금 \((route.itinerary?.fare.regular.totalFare)!)원"
         return cell
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let selectedRoute = routes[indexPath.row]
         selectedData = selectedRoute // 자료형의 변경
-        for leg in selectedRoute.itinerary.legs {
+        for leg in (selectedRoute.itinerary?.legs)! {
             if let steps = leg.steps {
                 for step in steps {
                     let linestring = step.linestring

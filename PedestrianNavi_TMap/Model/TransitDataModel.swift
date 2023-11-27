@@ -11,6 +11,7 @@ struct Route {
     // 'Plan' 구조체의 데이터를 저장할 속성들을 여기에 정의합니다.
     // 예시로, 'Itinerary' 객체들의 배열을 저장할 수 있습니다.
     var itinerary: Itinerary
+    var pedestrian: PedestrianData?
 }
 
 struct TransitData: Codable {
