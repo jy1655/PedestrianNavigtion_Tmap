@@ -122,22 +122,22 @@ class SearchView: UIViewController, UITableViewDataSource, UITableViewDelegate {
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        print(routes.count)
-        return routes.count
+        print(routes.count+1)
+        return routes.count + 1 // 도보이동을 추가하기 위해서 숫자를 1 증가시킴
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) // "RouteCell"을 "cell"로 수정
         let route = routes[indexPath.row]
         // 셀의 내용을 설정할 때 실제 경로 데이터를 반영
-        cell.textLabel?.text = "약 \((route.itinerary?.totalTime)!/60)분 소요, Transfers: \((route.itinerary?.transferCount)!)회, 요금 \((route.itinerary?.fare.regular.totalFare)!)원"
+        cell.textLabel?.text = "약 \(route.itinerary.totalTime/60)분 소요, Transfers: \(route.itinerary.transferCount)회, 요금 \(route.itinerary.fare.regular.totalFare))원"
         return cell
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let selectedRoute = routes[indexPath.row]
         selectedData = selectedRoute // 자료형의 변경
-        for leg in (selectedRoute.itinerary?.legs)! {
+        for leg in selectedRoute.itinerary.legs {
             if let steps = leg.steps {
                 for step in steps {
                     let linestring = step.linestring
