@@ -94,7 +94,16 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
 
         let endPoint = selectLocation ?? CLLocationCoordinate2D(latitude: 37.403049, longitude: 127.103318)
 
-        pedestrianAPICall(startPoint: startPoint, endPoint: endPoint) // API 호출
+        pedestrianAPICall(startPoint: startPoint, endPoint: endPoint) { result in
+            switch result {
+            case .success(let pedestrianData):
+                // 성공적으로 데이터를 받았을 때의 처리
+                print(pedestrianData)
+            case .failure(let error):
+                // 오류가 발생했을 때의 처리
+                print(error.localizedDescription)
+            }
+        }// API 호출
 
         path.append(startPoint)
         path.append(endPoint)
@@ -566,7 +575,7 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
         }
     }
 
-    func pedestrianAPICall(startPoint: CLLocationCoordinate2D, endPoint: CLLocationCoordinate2D) {
+    func pedestrianAPICall(startPoint: CLLocationCoordinate2D, endPoint: CLLocationCoordinate2D, completion: @escaping (Result<PedestrianData, Error>) -> Void) {
         let routeRequest = CallRestAPI(
             startX: String(describing: startPoint.longitude),
             startY: String(describing: startPoint.latitude),
@@ -582,12 +591,15 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
                     let pedestrianData = try JSONDecoder().decode(PedestrianData.self, from: data)
                     // featureCollection 처리
                     print(pedestrianData)
+                    completion(.success(pedestrianData))
                 } catch {
                     print("JSON 디코딩 에러: \(error)")
+                    completion(.failure(error))
                 }
 
             case .failure(let error):
                 print("API 호출 오류: \(error.localizedDescription)")
+                completion(.failure(error))
             }
         }
 
@@ -616,7 +628,7 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
 //        }
     }
 
-    func transitAPICall(startPoint: CLLocationCoordinate2D, endPoint: CLLocationCoordinate2D) {
+    func transitAPICall(startPoint: CLLocationCoordinate2D, endPoint: CLLocationCoordinate2D, completion: @escaping (Result<TransitData, Error>) -> Void) {
         let transitRequest = CallRestAPI(
             startX: String(describing: startPoint.longitude),
             startY: String(describing: startPoint.latitude),
@@ -632,12 +644,15 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
                     let transitData = try JSONDecoder().decode(TransitData.self, from: data)
                     // featureCollection 처리
                     print(transitData)
+                    completion(.success(transitData))
                 } catch {
                     print("JSON 디코딩 에러: \(error)")
+                    completion(.failure(error))
                 }
 
             case .failure(let error):
                 print("API 호출 오류: \(error.localizedDescription)")
+                completion(.failure(error))
             }
         }
 
@@ -936,7 +951,16 @@ extension ViewController {
 
 //        endPoint = selectLocation ?? CLLocationCoordinate2D(latitude: 37.403049, longitude: 127.103318)
 
-        transitAPICall(startPoint: startPoint, endPoint: endPoint ?? CLLocationCoordinate2D(latitude: 37.403049, longitude: 127.103318))
+        transitAPICall(startPoint: startPoint, endPoint: endPoint ?? CLLocationCoordinate2D(latitude: 37.403049, longitude: 127.103318)) { result in
+            switch result {
+            case .success(let transitData):
+                // 성공적으로 데이터를 받았을 때의 처리
+                print(transitData)
+            case .failure(let error):
+                // 오류가 발생했을 때의 처리
+                print(error.localizedDescription)
+            }
+        } // API 호출
 
         path.append(startPoint)
         path.append(endPoint ?? CLLocationCoordinate2D(latitude: 37.403049, longitude: 127.103318))
@@ -1012,8 +1036,8 @@ protocol ModalDelegate: AnyObject { // 모달창에서 메소드를 공유하기
     //    func transit(startPoint: CLLocationCoordinate2D, endPoint: CLLocationCoordinate2D?)
     func modalViewDidDisappear()
     func takeData(data: [Route])
-    func pedestrianAPICall(startPoint: CLLocationCoordinate2D, endPoint: CLLocationCoordinate2D)
-    func transitAPICall(startPoint: CLLocationCoordinate2D, endPoint: CLLocationCoordinate2D)
+    func pedestrianAPICall(startPoint: CLLocationCoordinate2D, endPoint: CLLocationCoordinate2D, completion: @escaping (Result<PedestrianData, Error>) -> Void)
+    func transitAPICall(startPoint: CLLocationCoordinate2D, endPoint: CLLocationCoordinate2D, completion: @escaping (Result<TransitData, Error>) -> Void)
     func updateLocation(newLocation: CLLocationCoordinate2D)
     func requestRoute()
     func searchLocationModal()

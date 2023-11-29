@@ -105,11 +105,12 @@ class SearchView: UIViewController, UITableViewDataSource, UITableViewDelegate {
     }
 
     @objc func searchButtonTapped() {
-        transdata() // 데이터 전송 (modalData)
+        transData() // 데이터 전송 (modalData), 테이블 뷰 보이기
+//        search()
         print("전송된 데이터:  \(routes)")
     }
 
-    func transdata() { // json 데이터 디코딩 + 데이터 저장및 부모뷰에도 데이터 전송
+    func transData() { // json 데이터 디코딩 + 데이터 저장및 부모뷰에도 데이터 전송
         if let jsonData = loadJsonDataFromFile() {
             if let transitData = decodeTransitData(from: jsonData) {
                 routes = transitData.metaData.plan.itineraries.map { Route(itinerary: $0) }
@@ -121,9 +122,29 @@ class SearchView: UIViewController, UITableViewDataSource, UITableViewDelegate {
         }
     }
 
+    func search() {
+        let startPoint = delegate?.currentLocation
+        let endPoint = delegate?.selectLocation
+        delegate?.transitAPICall(startPoint: startPoint!, endPoint: endPoint!) { result in
+            switch result {
+            case .success(let transitData):
+                // 성공적으로 데이터를 받았을 때의 처리
+                print(transitData)
+                self.routes = transitData.metaData.plan.itineraries.map { Route(itinerary: $0) }
+                self.delegate?.takeData(data: self.routes) // ViewController의 modalData에 정보 저장
+                DispatchQueue.main.async {
+                    self.routesTableView.reloadData()
+                }
+            case .failure(let error):
+                // 오류가 발생했을 때의 처리
+                print(error.localizedDescription)
+            }
+        } // API 호출
+    }
+
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        print(routes.count+1)
-        return routes.count + 1 // 도보이동을 추가하기 위해서 숫자를 1 증가시킴
+        print(routes.count)
+        return routes.count // 도보이동을 추가하기 위해서 숫자를 1 증가 시킴
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
