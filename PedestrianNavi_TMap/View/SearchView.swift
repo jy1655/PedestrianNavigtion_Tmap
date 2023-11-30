@@ -107,7 +107,7 @@ class SearchView: UIViewController, UITableViewDataSource, UITableViewDelegate {
     @objc func searchButtonTapped() {
         transData() // 데이터 전송 (modalData), 테이블 뷰 보이기
 //        search()
-        print("전송된 데이터:  \(routes)")
+        print("전송된 데이터: \(routes)")
     }
 
     func transData() { // json 데이터 디코딩 + 데이터 저장및 부모뷰에도 데이터 전송
