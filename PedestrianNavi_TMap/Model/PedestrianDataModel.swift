@@ -8,6 +8,10 @@
 import Foundation
 import CoreLocation
 
+struct Walk: Codable {
+    let feature: Features
+}
+
 struct PedestrianData: Codable {
     let type: String
     let features: [Features]?

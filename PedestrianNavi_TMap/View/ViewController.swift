@@ -77,9 +77,6 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
         }
     }
 
-    override func viewWillDisappear(_ animated: Bool) {
-    }
-
     @objc func requestRoute() {
         userLocation?.showsUserLocation = true // 사용자의 위치정보를 파란색 점으로 표시
 
@@ -178,7 +175,6 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
             // 하단을 비우기 위해 'mapView'의 하단을 뷰의 중간에 맞춥니다.
             mapView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor)
         ])
-
         mapView.trackingMode = .follow// 트래킹 모드 활성화
     }
 
@@ -188,7 +184,7 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
         searchButton = setButton(title: "검색", selector: #selector(searchLocationModal))
         self.view.addSubview(searchButton)
 
-        //        // 메뉴 버튼 설정
+        // 메뉴 버튼 설정
         menuButton = setButton(title: "Menu", selector: #selector(presentSideMenu))
         self.view.addSubview(menuButton)
         // 경로 탐색 버튼 설정
@@ -947,10 +943,6 @@ extension ViewController {
 
         mapView.trackingMode = .follow // 트래킹 모드 활성화
 
-//        startPoint = currentLocation!
-
-//        endPoint = selectLocation ?? CLLocationCoordinate2D(latitude: 37.403049, longitude: 127.103318)
-
         transitAPICall(startPoint: startPoint, endPoint: endPoint ?? CLLocationCoordinate2D(latitude: 37.403049, longitude: 127.103318)) { result in
             switch result {
             case .success(let transitData):
@@ -969,33 +961,33 @@ extension ViewController {
     }
 
     func distanceFromPolyline() -> CLLocationDistance {
-            var minDistance: CLLocationDistance = .greatestFiniteMagnitude
+        var minDistance: CLLocationDistance = .greatestFiniteMagnitude
 
-            for polyline in polylines {
-                for i in 0..<(polyline.path.count - 1) {
-                    let startPoint = polyline.path[i]
-                    let endPoint = polyline.path[i + 1]
+        for polyline in polylines {
+            for i in 0..<(polyline.path.count - 1) {
+                let startPoint = polyline.path[i]
+                let endPoint = polyline.path[i + 1]
 
-                    let distance = calculateDistanceFromPointToLineSegment(point: currentLocation, lineStart: startPoint, lineEnd: endPoint)
-                    minDistance = min(minDistance, distance)
-                }
+                let distance = calculateDistanceFromPointToLineSegment(point: currentLocation, lineStart: startPoint, lineEnd: endPoint)
+                minDistance = min(minDistance, distance)
             }
-
-            return minDistance
         }
 
-        func distanceFromLineSegment(point: CLLocationCoordinate2D, start: [CLLocationCoordinate2D], end: [CLLocationCoordinate2D]) -> CLLocationDistance {
-            // 여기에 선분과 점 사이의 최소 거리를 계산하는 로직을 구현합니다.
-            // 이는 수학적인 계산이 필요하며, 선형 대수학을 사용하여 구현할 수 있습니다.
-            var minDistance: CLLocationDistance = .greatestFiniteMagnitude
+        return minDistance
+    }
 
-                for (startPoint, endPoint) in zip(start, end) {
-                    let distance = calculateDistanceFromPointToLineSegment(point: point, lineStart: startPoint, lineEnd: endPoint)
-                    minDistance = min(minDistance, distance)
-                }
+    func distanceFromLineSegment(point: CLLocationCoordinate2D, start: [CLLocationCoordinate2D], end: [CLLocationCoordinate2D]) -> CLLocationDistance {
+        // 여기에 선분과 점 사이의 최소 거리를 계산하는 로직을 구현합니다.
+        // 이는 수학적인 계산이 필요하며, 선형 대수학을 사용하여 구현할 수 있습니다.
+        var minDistance: CLLocationDistance = .greatestFiniteMagnitude
 
-                return minDistance
+        for (startPoint, endPoint) in zip(start, end) {
+            let distance = calculateDistanceFromPointToLineSegment(point: point, lineStart: startPoint, lineEnd: endPoint)
+            minDistance = min(minDistance, distance)
         }
+
+        return minDistance
+    }
 
 
     private func calculateDistanceFromPointToLineSegment(point: CLLocationCoordinate2D, lineStart: CLLocationCoordinate2D, lineEnd: CLLocationCoordinate2D) -> CLLocationDistance {
@@ -1023,8 +1015,8 @@ extension ViewController {
     }
 
     func updateLocation(newLocation: CLLocationCoordinate2D) {
-            self.currentLocation = newLocation
-        }
+        self.currentLocation = newLocation
+    }
 
 
 }
