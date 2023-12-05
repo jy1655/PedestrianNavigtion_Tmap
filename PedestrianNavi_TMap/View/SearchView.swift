@@ -122,9 +122,7 @@ class SearchView: UIViewController, UITableViewDataSource, UITableViewDelegate {
                 delegate?.takeData(data: routes) // ViewController의 modalData에 정보 저장
             }
         }
-        dispatchGroup.leave()
 
-        dispatchGroup.enter()
         delegate?.pedestrianAPICall(startPoint: startPoint!, endPoint: endPoint) { result in
             switch result {
             case .success(let walkData):
@@ -132,13 +130,12 @@ class SearchView: UIViewController, UITableViewDataSource, UITableViewDelegate {
                 print(walkData)
                 self.walks = walkData
 //                self.delegate?.takeData(data: self.walks) // ViewController의 modalData에 정보 저장
-                dispatchGroup.leave()
             case .failure(let error):
                 // 오류가 발생했을 때의 처리
                 print(error.localizedDescription)
-                dispatchGroup.leave()
             }
         }
+        dispatchGroup.leave()
 
         dispatchGroup.notify(queue: .main) {
             self.routesTableView.reloadData() // 모든작업 완료 후 실행될 코드
@@ -158,18 +155,18 @@ class SearchView: UIViewController, UITableViewDataSource, UITableViewDelegate {
                 print(transitData)
                 self.routes = transitData.metaData.plan.itineraries.map { Route(itinerary: $0) }
                 self.delegate?.takeData(data: self.routes) // ViewController의 modalData에 정보 저장
-                dispatchGroup.leave()
-                DispatchQueue.main.async {
-                    self.routesTableView.reloadData()
-                }
+//                dispatchGroup.leave()
+//                DispatchQueue.main.async {
+//                    self.routesTableView.reloadData()
+//                }
             case .failure(let error):
                 // 오류가 발생했을 때의 처리
                 print(error.localizedDescription)
-                dispatchGroup.leave()
+//                dispatchGroup.leave()
             }
         } // API 호출
 
-        dispatchGroup.enter()
+//        dispatchGroup.enter()
         delegate?.pedestrianAPICall(startPoint: startPoint!, endPoint: endPoint) { result in
             switch result {
             case .success(let walkData):
@@ -177,13 +174,14 @@ class SearchView: UIViewController, UITableViewDataSource, UITableViewDelegate {
                 print(walkData)
                 self.walks = walkData
 //                self.delegate?.takeData(data: self.walks) // ViewController의 modalData에 정보 저장
-                dispatchGroup.leave()
+//                dispatchGroup.leave()
             case .failure(let error):
                 // 오류가 발생했을 때의 처리
                 print(error.localizedDescription)
-                dispatchGroup.leave()
+//                dispatchGroup.leave()
             }
         }
+        dispatchGroup.leave()
 
         dispatchGroup.notify(queue: .main) {
             self.routesTableView.reloadData() // 모든작업 완료 후 실행될 코드
@@ -205,7 +203,7 @@ class SearchView: UIViewController, UITableViewDataSource, UITableViewDelegate {
             if walks != nil {
                 let walk = walks
                 // 셀에 walk 데이터를 설정
-                cell.textLabel?.text = "약 \(walk!.features!.first!.properties!.totalTime!/60)분 소요, 총 거리: \(walk!.features!.first!.properties!.totalDistance!)M"
+                cell.textLabel?.text = "도보이동 약 \(walk!.features!.first!.properties!.totalTime!/60)분 소요, 총 거리: \(walk!.features!.first!.properties!.totalDistance!)M"
                 return cell
             } else {
                 return UITableViewCell()
