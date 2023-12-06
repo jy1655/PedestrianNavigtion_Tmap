@@ -63,7 +63,6 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         locationCheck(on: self)
-        userLocation?.showsUserLocation = true // 사용자의 위치정보를 파란색 점으로 표시
     }
 
     override func didReceiveMemoryWarning() {
@@ -172,11 +171,14 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
             mapView.topAnchor.constraint(equalTo: self.view.topAnchor),
             mapView.leftAnchor.constraint(equalTo: self.view.leftAnchor),
             mapView.rightAnchor.constraint(equalTo: self.view.rightAnchor),
-            // 하단을 비우기 위해 'mapView'의 하단을 뷰의 중간에 맞춥니다.
             mapView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor)
         ])
         mapView.trackingMode = .follow// 트래킹 모드 활성화
     }
+
+    private func mapViewDidFinishLoadingMap() async { // showsUserLocation 점이 나오지 않는 버그상황 방지를 위해 async 사용
+        userLocation?.showsUserLocation = true // 사용자의 위치정보를 파란색 점으로 표시
+    } // 지도가 생성된 이후에 실행할 메소드
 
     func setUpUI() {
 
