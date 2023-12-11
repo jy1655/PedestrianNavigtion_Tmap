@@ -20,9 +20,11 @@ class SearchView: UIViewController, UITableViewDataSource, UITableViewDelegate {
     var routes = [Route]() // Route 모델 배열
     var walks: PedestrianData? = nil // PedestrianData 모델 배열
     var selectedData: Route? = nil // 유저가 선택한 길찾기 정보 전달용
-    var onDataUpdate: ((Route?) -> Void)?
+    var onTransitDataUpdate: ((Route?) -> Void)?
+    var onWalkDataUpdate: ((PedestrianData?) -> Void)?
     var isDataUpdated = false // 모달 페이지가 닫혔을떄 경로정보를 표시할지 여부 판단용
     var routeButtonBottomConstraint: NSLayoutConstraint?
+    var activityIndicator: UIActivityIndicatorView!
 
     let decoder = JSONDecoder()
 
@@ -45,6 +47,15 @@ class SearchView: UIViewController, UITableViewDataSource, UITableViewDelegate {
             }
         } // 키보드 알림 설정
         hideKeyboardWhenTappedAround() // 키보드 내려가는 탭제스쳐 인식기
+
+        activityIndicator = UIActivityIndicatorView(style: .large)
+        activityIndicator.center = self.view.center
+        activityIndicator.hidesWhenStopped = true
+
+        // 뷰에 인디케이터 추가
+        view.addSubview(activityIndicator)
+
+
     }
 
     override func viewDidDisappear(_ animated: Bool) {
@@ -105,85 +116,96 @@ class SearchView: UIViewController, UITableViewDataSource, UITableViewDelegate {
     }
 
     @objc func searchButtonTapped() {
-        transData() // 데이터 전송 (modalData), 테이블 뷰 보이기
-//        search()
-        print("전송된 데이터: \(routes)")
+        if delegate?.selectLocation != nil {
+            transData() // 데이터 전송 (modalData), 테이블 뷰 보이기 - Api호출 횟수 차감 방지용 테스트 메소드
+//            search() // 실제 서비스용 메소드
+//            print("전송된 데이터: \(routes)")
+        } else {
+            setAlert(title: "목적지 없음!", message: "목적지를 설정해 주세요", actions: nil, on: self)
+        }
     }
 
     func transData() { // json 데이터 디코딩 + 데이터 저장및 부모뷰에도 데이터 전송
+        showLoadingScreen()
+
         let startPoint = delegate?.currentLocation
-        let endPoint = delegate?.selectLocation ?? CLLocationCoordinate2D(latitude: 37.403049, longitude: 127.103318) // 임시 작성
+        let endPoint = delegate?.selectLocation!
         let dispatchGroup = DispatchGroup()
 
         dispatchGroup.enter()
         if let jsonData = loadJsonDataFromFile() {
             if let transitData = decodeTransitData(from: jsonData) {
                 routes = transitData.metaData.plan.itineraries.map { Route(itinerary: $0) }
-                delegate?.takeData(data: routes) // ViewController의 modalData에 정보 저장
+                delegate?.takeData(routes, walks) // ViewController의 modalData에 정보 저장
             }
         }
 
-        delegate?.pedestrianAPICall(startPoint: startPoint!, endPoint: endPoint) { result in
+
+        delegate?.pedestrianAPICall(startPoint: startPoint!, endPoint: endPoint!) { result in
             switch result {
             case .success(let walkData):
                 // 성공적으로 데이터를 받았을 때의 처리
                 print(walkData)
                 self.walks = walkData
 //                self.delegate?.takeData(data: self.walks) // ViewController의 modalData에 정보 저장
+                dispatchGroup.leave()
             case .failure(let error):
                 // 오류가 발생했을 때의 처리
                 print(error.localizedDescription)
+                dispatchGroup.leave()
             }
         }
-        dispatchGroup.leave()
 
         dispatchGroup.notify(queue: .main) {
+            self.hideLoadingScreen()
             self.routesTableView.reloadData() // 모든작업 완료 후 실행될 코드
         }
     }
 
     func search() {
+        showLoadingScreen() // 지연상황에서의 오류 방지를 위한 로딩스크린 보이기
+
         let startPoint = delegate?.currentLocation
-        let endPoint = delegate?.selectLocation ?? CLLocationCoordinate2D(latitude: 37.403049, longitude: 127.103318) // 임시 작성
+        let endPoint = delegate?.selectLocation!
         let dispatchGroup = DispatchGroup()
 
         dispatchGroup.enter()
-        delegate?.transitAPICall(startPoint: startPoint!, endPoint: endPoint) { result in
+        dispatchGroup.enter()
+        delegate?.transitAPICall(startPoint: startPoint!, endPoint: endPoint!) { result in
             switch result {
             case .success(let transitData):
                 // 성공적으로 데이터를 받았을 때의 처리
                 print(transitData)
                 self.routes = transitData.metaData.plan.itineraries.map { Route(itinerary: $0) }
-                self.delegate?.takeData(data: self.routes) // ViewController의 modalData에 정보 저장
-//                dispatchGroup.leave()
+                self.delegate?.takeData(self.routes, self.walks!) // ViewController의 modalData에 정보 저장
+                dispatchGroup.leave()
 //                DispatchQueue.main.async {
 //                    self.routesTableView.reloadData()
 //                }
             case .failure(let error):
                 // 오류가 발생했을 때의 처리
                 print(error.localizedDescription)
-//                dispatchGroup.leave()
+                dispatchGroup.leave()
             }
-        } // API 호출
+        } // API 호출 ( [ ) ]
 
-//        dispatchGroup.enter()
-        delegate?.pedestrianAPICall(startPoint: startPoint!, endPoint: endPoint) { result in
+        delegate?.pedestrianAPICall(startPoint: startPoint!, endPoint: endPoint!) { result in
             switch result {
             case .success(let walkData):
                 // 성공적으로 데이터를 받았을 때의 처리
                 print(walkData)
                 self.walks = walkData
 //                self.delegate?.takeData(data: self.walks) // ViewController의 modalData에 정보 저장
-//                dispatchGroup.leave()
+                dispatchGroup.leave()
             case .failure(let error):
                 // 오류가 발생했을 때의 처리
                 print(error.localizedDescription)
-//                dispatchGroup.leave()
+                dispatchGroup.leave()
             }
         }
-        dispatchGroup.leave()
 
         dispatchGroup.notify(queue: .main) {
+            self.hideLoadingScreen()
             self.routesTableView.reloadData() // 모든작업 완료 후 실행될 코드
         }
     }
@@ -203,7 +225,7 @@ class SearchView: UIViewController, UITableViewDataSource, UITableViewDelegate {
             if walks != nil {
                 let walk = walks
                 // 셀에 walk 데이터를 설정
-                cell.textLabel?.text = "도보이동 약 \(walk!.features!.first!.properties!.totalTime!/60)분 소요, 총 거리: \(walk!.features!.first!.properties!.totalDistance!)M"
+                cell.textLabel?.text = "도보이동 약 \(walk!.features.first!.properties!.totalTime!/60)분 소요, 총 거리: \(walk!.features.first!.properties!.totalDistance!)M"
                 return cell
             } else {
                 return UITableViewCell()
@@ -219,8 +241,18 @@ class SearchView: UIViewController, UITableViewDataSource, UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.row < 1 {
-            _ = walks
+            let res = walks!.features.map { Walk(feature: $0) }
             print("걷기")
+            for geometry in res {
+                if let dots = geometry.feature.geometry.coordinates {
+                    for coordinates in dots {
+                        let latitude = coordinates.latitude
+                        let longitude = coordinates.longitude
+                        print(latitude)
+                        print(longitude)
+                    }
+                }
+            }
             close()
         } else {
             let selectedRoute = routes[indexPath.row - 1]
@@ -250,9 +282,20 @@ class SearchView: UIViewController, UITableViewDataSource, UITableViewDelegate {
         }
     }
 
+    func showLoadingScreen() {
+        // 로딩 창을 표시하는 코드
+        activityIndicator.startAnimating()
+    }
+
+    func hideLoadingScreen() {
+        // 인디케이터 중지
+        activityIndicator.stopAnimating()
+    }
+
     func close() {
         print("보내질 예정 선택된 경로 데이터: \(String(describing: selectedData))")
-        onDataUpdate?(selectedData ?? nil)
+        onTransitDataUpdate?(selectedData ?? nil)
+        onWalkDataUpdate?(walks ?? nil)
         updateData() // isDataUpdated = true 로 변경
         dismiss(animated: true)
     }

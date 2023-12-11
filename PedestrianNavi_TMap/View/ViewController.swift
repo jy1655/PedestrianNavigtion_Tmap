@@ -27,7 +27,7 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
     //    var installed: Bool = TMapApi.isTmapApplicationInstalled() // 티맵 App 설치 여부를 판단한다
     var path = Array<CLLocationCoordinate2D>()
     var locationManager: CLLocationManager!
-    var currentLocation: CLLocationCoordinate2D!
+    var currentLocation: CLLocationCoordinate2D?
     var selectLocation: CLLocationCoordinate2D?
     var gpsStatus: String = "UNKNOWN" { didSet { detectStatus() } } // GPS 상태변화 확인용
     var markers:Array<TMapMarker> = [] // 마커를 관리하기 위한 배열
@@ -41,11 +41,13 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
     var isTableViewVisible = false
     let imuCheck = IMUCheck()
     var menuTableViewController: MenuTableViewController?
-    let userLocation: MKMapView? = nil // 사용자 위치표시용
-    var modalData = [Route]()
+    let mkView: MKMapView? = nil // 사용자 위치표시용
+    var modalTransitData = [Route]()
+    var modalWalkData: PedestrianData? = nil
     var modalLineData: Route?
     var currentCustomView: MarkerUIView?
     var isNavigationActive = false
+    var isInitialLocationSet = false  // 처음 위치 설정 여부 추적
 
 
 
@@ -77,7 +79,6 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
     }
 
     @objc func requestRoute() {
-        userLocation?.showsUserLocation = true // 사용자의 위치정보를 파란색 점으로 표시
 
         clearMarkers()
         clearPolylines()
@@ -142,9 +143,13 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
 
         let modalView = SearchView()
         modalView.delegate = self // 자신을 delegate로 지정
-        modalView.routes = modalData // 이전데이터 전달
-        modalView.onDataUpdate = { [weak self] updatedData in
+        modalView.routes = modalTransitData // 이전데이터 전달
+        modalView.walks = modalWalkData
+        modalView.onTransitDataUpdate = { [weak self] updatedData in
             self?.modalLineData = updatedData // 업데이트된 데이터 저장
+        }
+        modalView.onWalkDataUpdate = { [weak self] updatedData in
+            self?.modalWalkData = updatedData // 업데이트된 데이터 저장
         }
         present(modalView, animated: true)
     }
@@ -176,8 +181,12 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
         mapView.trackingMode = .follow// 트래킹 모드 활성화
     }
 
-    private func mapViewDidFinishLoadingMap() async { // showsUserLocation 점이 나오지 않는 버그상황 방지를 위해 async 사용
-        userLocation?.showsUserLocation = true // 사용자의 위치정보를 파란색 점으로 표시
+    internal func mapViewDidFinishLoadingMap() {
+        mkView?.showsUserLocation = true // 사용자의 위치정보를 파란색 점으로 표시
+        if isInitialLocationSet == false {
+            isInitialLocationSet = true
+            mapView.setCenter(currentLocation!)
+        }
     } // 지도가 생성된 이후에 실행할 메소드
 
     func setUpUI() {
@@ -189,7 +198,7 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
         // 메뉴 버튼 설정
         menuButton = setButton(title: "Menu", selector: #selector(presentSideMenu))
         self.view.addSubview(menuButton)
-        // 경로 탐색 버튼 설정
+        // 경로 탐색  버튼 설정
         routeButton = setButton(title: "경로 탐색", selector: #selector(requestRoute))
         view.addSubview(routeButton)
 //        self.view.addSubview(routeButton)
@@ -243,7 +252,7 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
     }
 
     func modalViewDidDisappear() { // SearchView 모달이 닫히면서 조건을 충족하면 작동하는 메소드
-        print("전송받은 전체 데이터: \(modalData)")
+        print("전송받은 전체 데이터: \(modalTransitData)")
         print("경로를 표시해야할 데이터: \(String(describing: modalLineData))")
 
         if modalLineData != nil {
@@ -273,8 +282,9 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
         } // 선택했던 경로를 지도에 표시(polyline)
     } // 모달창이 경로를 선택하면서 닫힐떄 호출되는 메소드
 
-    func takeData(data: [Route]) {
-        modalData = data
+    func takeData(_ transitData: [Route], _ walkData: PedestrianData?) {
+        modalTransitData = transitData
+        modalWalkData = walkData
     } // 모달에서 검색한 대중교통경로 정보(10개치) 저장
 
     func createPolylines(from route: Route) -> [TMapPolyline] {
@@ -409,9 +419,9 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
             }
 
             currentLocation = CLLocationCoordinate2D(latitude: latitude, longitude: longitude) // CLLocationCoordinate2D로 변환
-            updateLocation(newLocation: currentLocation)
+            updateLocation(newLocation: currentLocation!)
 
-            mapView.animateTo(location: currentLocation) // 현재 위치로 지도의 위치를 옮긴다.
+            mapView.animateTo(location: currentLocation!) // 현재 위치로 지도의 위치를 옮긴다.
 
             print("Current coordinates: \(String(describing: currentLocation))") // 여기서 coordinate를 사용할 수 있습니다.
 
@@ -430,7 +440,6 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
         case .authorizedWhenInUse, .authorizedAlways:
             // 권한이 승인되었을때
             print("권한 설정 완료")
-            userLocation?.showsUserLocation = true // 사용자의 위치정보를 파란색 점으로 표시
         case .notDetermined:
             print("권한 결정 안함")
             checkAuthorization()
@@ -634,7 +643,7 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
             endY: String(describing: endPoint.latitude)
         )
 
-        transitRequest.transitRoute { result in
+        transitRequest.transitSubRoute { result in
             switch result {
             case .success(let data):
                 do {
@@ -791,7 +800,7 @@ extension ViewController {
 
     //화면이동
     public func basicFunc001(){
-        self.mapView?.setCenter(currentLocation) // 현재 사용자 위치를 중심으로
+        self.mapView?.setCenter(currentLocation!) // 현재 사용자 위치를 중심으로
         mapView.animateTo(zoom: 17) // 줌레벨 조정
         mapView.trackingMode = .followWithHeading
         dismissSideMenu()
@@ -970,7 +979,7 @@ extension ViewController {
                 let startPoint = polyline.path[i]
                 let endPoint = polyline.path[i + 1]
 
-                let distance = calculateDistanceFromPointToLineSegment(point: currentLocation, lineStart: startPoint, lineEnd: endPoint)
+                let distance = calculateDistanceFromPointToLineSegment(point: currentLocation!, lineStart: startPoint, lineEnd: endPoint)
                 minDistance = min(minDistance, distance)
             }
         }
@@ -1025,11 +1034,11 @@ extension ViewController {
 
 
 protocol ModalDelegate: AnyObject { // 모달창에서 메소드를 공유하기 위한 Delegate
-    var currentLocation: CLLocationCoordinate2D! { get set }
+    var currentLocation: CLLocationCoordinate2D? { get set }
     var selectLocation: CLLocationCoordinate2D? { get set }
     //    func transit(startPoint: CLLocationCoordinate2D, endPoint: CLLocationCoordinate2D?)
     func modalViewDidDisappear()
-    func takeData(data: [Route])
+    func takeData(_ transitData: [Route], _ walkData: PedestrianData?)
     func pedestrianAPICall(startPoint: CLLocationCoordinate2D, endPoint: CLLocationCoordinate2D, completion: @escaping (Result<PedestrianData, Error>) -> Void)
     func transitAPICall(startPoint: CLLocationCoordinate2D, endPoint: CLLocationCoordinate2D, completion: @escaping (Result<TransitData, Error>) -> Void)
     func updateLocation(newLocation: CLLocationCoordinate2D)
