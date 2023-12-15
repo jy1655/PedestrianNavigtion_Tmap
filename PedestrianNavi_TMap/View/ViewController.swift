@@ -477,13 +477,6 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
         _ = TMapMarker(position: position)
 
         setMarker(position: position)
-
-        //        let label = UILabel(frame: CGRect(x: 0, y: 0, width: 30, height: 50))
-        //        label.text = "좌측"
-        //        marker.leftCalloutView = label
-        //        let label2 = UILabel(frame: CGRect(x: 0, y: 0, width: 30, height: 50))
-        //        label2.text = "우측"
-        //        marker.rightCalloutView = label2
     }
 
     func mapView(_ mapView: TMapView, tapOnMarker marker: TMapMarker) {

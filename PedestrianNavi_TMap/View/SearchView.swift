@@ -119,7 +119,6 @@ class SearchView: UIViewController, UITableViewDataSource, UITableViewDelegate {
         if delegate?.selectLocation != nil {
             transData() // 데이터 전송 (modalData), 테이블 뷰 보이기 - Api호출 횟수 차감 방지용 테스트 메소드
 //            search() // 실제 서비스용 메소드
-//            print("전송된 데이터: \(routes)")
         } else {
             setAlert(title: "목적지 없음!", message: "목적지를 설정해 주세요", actions: nil, on: self)
         }
@@ -187,7 +186,7 @@ class SearchView: UIViewController, UITableViewDataSource, UITableViewDelegate {
                 print(error.localizedDescription)
                 dispatchGroup.leave()
             }
-        } // API 호출 ( [ ) ]
+        } // API 호출
 
         delegate?.pedestrianAPICall(startPoint: startPoint!, endPoint: endPoint!) { result in
             switch result {
@@ -212,11 +211,8 @@ class SearchView: UIViewController, UITableViewDataSource, UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         print(routes.count)
-        if routes.count == 0 { // routes 데이터가 없으면 테이블 생성 안함
-            return 0
-        } else {
-            return routes.count + 1 // 도보이동을 추가하기 위해서 숫자를 1 증가 시킴
-        }
+        return routes.count == 0 ? 0 : routes.count + 1 // 삼항조건 연산자로 줄 줄임
+        // 도보이동을 추가하기 위해서 숫자를 1 증가 시키지만 테이블이 공백으로 하나만 생성되는것을 방지하기 위한 조건(routes 데이터가 없으면 테이블 생성 안함)
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
