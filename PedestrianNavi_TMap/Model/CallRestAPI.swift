@@ -8,7 +8,7 @@
 import Foundation
 
 
-struct CallRestAPI {
+struct CallRestAPI { // 보행자 네비게이션과 대중교통 네비게이션
 
     let startX: String
     let startY: String
@@ -18,7 +18,7 @@ struct CallRestAPI {
 //    let timemachine: String
     let callAppKey = CallAppKey()
 
-        // API 호출 메소드
+        // 보행자 API 호출 메소드
     func fetchRoute(completion: @escaping (Result<Data, Error>) -> Void) {
         let urlString = "https://apis.openapi.sk.com/tmap/routes/pedestrian?version=1&format=json&callback=result" // 보행자 경로요청 API URL
 
@@ -65,6 +65,8 @@ struct CallRestAPI {
         task.resume()
     }
 
+
+    // 대중교통 API
     func transitRoute(completion: @escaping (Result<Data, Error>) -> Void) {
         let urlStringT = "https://apis.openapi.sk.com/transit/routes" // 대중교통 경로요청 API URL
 

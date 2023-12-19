@@ -19,7 +19,7 @@ import SideMenu
 import MapKit
 
 
-class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLocationManagerDelegate, ModalDelegate {
+class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLocationManagerDelegate, ModalDelegate { // 초기화면 및 메인메뉴
 
     let callAppkey = CallAppKey()
     let pathData = TMapPathData() // 경로 탐색을 위한 지정

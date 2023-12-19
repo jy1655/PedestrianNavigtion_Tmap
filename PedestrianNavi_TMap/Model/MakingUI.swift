@@ -11,6 +11,7 @@ import CoreLocation
 struct MakingUI {
 
     static func colorWithHexString(hexString: String) -> UIColor { // 16진수 색상 코드를 UIColor로 변환하는 함수
+        // 대중교통 API에 포함된 경로 색상 구현용
         var cString: String = hexString.trimmingCharacters(in: .whitespacesAndNewlines).uppercased()
 
         if cString.hasPrefix("#") {

@@ -8,11 +8,13 @@
 import Foundation
 import CoreLocation
 
+/** 보행자 네비게이션 Json 데이터 형식 **/
+
 struct Walk {
     let feature: Features
 }
 
-struct PedestrianData: Codable {
+struct PedestrianData: Codable { // 제일 외곽부
     let type: String
     let features: [Features]
 }

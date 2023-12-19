@@ -9,6 +9,7 @@ import UIKit
 import Foundation
 
 class MenuTableViewController: UITableViewController {
+    // 23.12.19 기준 메뉴 버튼을 눌렀을때 좌측에서 나오는 사이드 메뉴
 
     weak var ViewController: ViewController?
     var menuItems: Array<LeftMenuData> = []// 메뉴 항목 목록

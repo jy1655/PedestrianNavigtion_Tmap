@@ -8,7 +8,7 @@
 import Foundation
 
 
-/** transitApi 로 불러왔을때의 데이터 셋 **/
+/** 대중교통 API 로 불러왔을때의 Json 데이터 셋 **/
 
 struct Route {
     // 'Plan' 구조체의 데이터를 저장할 속성들을 여기에 정의합니다.

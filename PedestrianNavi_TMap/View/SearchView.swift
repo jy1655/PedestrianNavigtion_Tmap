@@ -11,6 +11,7 @@ import CoreLocation
 
 
 class SearchView: UIViewController, UITableViewDataSource, UITableViewDelegate {
+    // 23.12.19기준 검색버튼을 눌렀을시에 나오는 모달 화면 페이지
 
     weak var delegate: ModalDelegate?
     let departureTextField = UITextField()
@@ -50,7 +51,7 @@ class SearchView: UIViewController, UITableViewDataSource, UITableViewDelegate {
 
         activityIndicator = UIActivityIndicatorView(style: .large)
         activityIndicator.center = self.view.center
-        activityIndicator.hidesWhenStopped = true
+        activityIndicator.hidesWhenStopped = true // 로딩 애니메이션 설정
 
         // 뷰에 인디케이터 추가
         view.addSubview(activityIndicator)
@@ -115,7 +116,7 @@ class SearchView: UIViewController, UITableViewDataSource, UITableViewDelegate {
         ])
     }
 
-    @objc func searchButtonTapped() {
+    @objc func searchButtonTapped() { // 검색버튼 클릭시 행동
         if delegate?.selectLocation != nil {
             transData() // 데이터 전송 (modalData), 테이블 뷰 보이기 - Api호출 횟수 차감 방지용 테스트 메소드
 //            search() // 실제 서비스용 메소드
@@ -132,7 +133,7 @@ class SearchView: UIViewController, UITableViewDataSource, UITableViewDelegate {
         let dispatchGroup = DispatchGroup()
 
         dispatchGroup.enter()
-        if let jsonData = loadJsonDataFromFile() {
+        if let jsonData = loadTestJsonDataFromFile() {
             if let transitData = decodeTransitData(from: jsonData) {
                 routes = transitData.metaData.plan.itineraries.map { Route(itinerary: $0) }
                 delegate?.takeData(routes, walks) // ViewController의 modalData에 정보 저장
@@ -216,7 +217,7 @@ class SearchView: UIViewController, UITableViewDataSource, UITableViewDelegate {
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if indexPath.row < 1 {
+        if indexPath.row < 1 { // 최상단에 도보 네비게이션 정보 보이기
             let cell = tableView.dequeueReusableCell(withIdentifier: "walkCell", for: indexPath) //
             if walks != nil {
                 let walk = walks
@@ -226,7 +227,7 @@ class SearchView: UIViewController, UITableViewDataSource, UITableViewDelegate {
             } else {
                 return UITableViewCell()
             }
-        } else {
+        } else { // 그 아래부터는 대중교통 정보 보이기(최대 10개)
             let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) // "RouteCell"을 "cell"로 수정
             let route = routes[indexPath.row - 1]
             // 셀의 내용을 설정할 때 실제 경로 데이터를 반영
@@ -288,19 +289,32 @@ class SearchView: UIViewController, UITableViewDataSource, UITableViewDelegate {
         activityIndicator.stopAnimating()
     }
 
-    func close() {
-        print("보내질 예정 선택된 경로 데이터: \(String(describing: selectedData))")
+    func close() { // 검색완료 이후 창이 닫히면서 실행되는 메소드
+        print("보내질 예정 선택된 경로 데이터: \(String(describing: selectedData))") // 로그 확인용 - 후에 주석처리?
         onTransitDataUpdate?(selectedData ?? nil)
         onWalkDataUpdate?(walks ?? nil)
         updateData() // isDataUpdated = true 로 변경
         dismiss(animated: true)
     }
 
-    func updateData() {
+    func updateData() { // 데이터 변경여부
         isDataUpdated = true
     }
 
-    func loadJsonDataFromFile() -> Data? {
+
+    // JSON 데이터를 TransitData 타입으로 디코딩하는 함수
+    func decodeTransitData(from data: Data) -> TransitData? {
+        let decoder = JSONDecoder()
+        do {
+            let transitData = try decoder.decode(TransitData.self, from: data)
+            return transitData
+        } catch {
+            print("Error decoding transit.json: \(error)")
+            return nil
+        }
+    }
+
+    func loadTestJsonDataFromFile() -> Data? { // API를 실제로 부르지 않고 테스트 하기 위한 메소드
         guard let url = Bundle.main.url(forResource: "transit", withExtension: "json") else {
             print("transit.json file not found")
             return nil
@@ -310,17 +324,6 @@ class SearchView: UIViewController, UITableViewDataSource, UITableViewDelegate {
             return try Data(contentsOf: url)
         } catch {
             print("Error reading transit.json file: \(error)")
-            return nil
-        }
-    }
-    // JSON 데이터를 TransitData 타입으로 디코딩하는 함수
-    func decodeTransitData(from data: Data) -> TransitData? {
-        let decoder = JSONDecoder()
-        do {
-            let transitData = try decoder.decode(TransitData.self, from: data)
-            return transitData
-        } catch {
-            print("Error decoding transit.json: \(error)")
             return nil
         }
     }
