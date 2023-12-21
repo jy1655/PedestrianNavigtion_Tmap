@@ -118,14 +118,15 @@ class SearchView: UIViewController, UITableViewDataSource, UITableViewDelegate {
 
     @objc func searchButtonTapped() { // 검색버튼 클릭시 행동
         if delegate?.selectLocation != nil {
-            transData() // 데이터 전송 (modalData), 테이블 뷰 보이기 - Api호출 횟수 차감 방지용 테스트 메소드
+            testTransData() // 데이터 전송 (modalData), 테이블 뷰 보이기 - Api호출 횟수 차감 방지용 테스트 메소드
 //            search() // 실제 서비스용 메소드
         } else {
             setAlert(title: "목적지 없음!", message: "목적지를 설정해 주세요", actions: nil, on: self)
         }
     }
 
-    func transData() { // json 데이터 디코딩 + 데이터 저장및 부모뷰에도 데이터 전송
+    func testTransData() { // json 데이터 디코딩 + 데이터 저장및 부모뷰에도 데이터 전송
+        // 실제로 사용될 메소드 아님 테스트용
         showLoadingScreen()
 
         let startPoint = delegate?.currentLocation
@@ -169,8 +170,8 @@ class SearchView: UIViewController, UITableViewDataSource, UITableViewDelegate {
         let endPoint = delegate?.selectLocation!
         let dispatchGroup = DispatchGroup()
 
-        dispatchGroup.enter()
-        dispatchGroup.enter()
+        dispatchGroup.enter() // API를 개별로 2건을 불러와야함(대중교통, 도보)
+        dispatchGroup.enter() // enter,leave를 하나로 했을때 데이터를 가져오기 전에 leave하는 현상있음
         delegate?.transitAPICall(startPoint: startPoint!, endPoint: endPoint!) { result in
             switch result {
             case .success(let transitData):
@@ -228,7 +229,7 @@ class SearchView: UIViewController, UITableViewDataSource, UITableViewDelegate {
                 return UITableViewCell()
             }
         } else { // 그 아래부터는 대중교통 정보 보이기(최대 10개)
-            let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) // "RouteCell"을 "cell"로 수정
+            let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
             let route = routes[indexPath.row - 1]
             // 셀의 내용을 설정할 때 실제 경로 데이터를 반영
             cell.textLabel?.text = "약 \(route.itinerary.totalTime/60)분 소요, Transfers: \(route.itinerary.transferCount)회, 요금 \(route.itinerary.fare.regular.totalFare))원"
@@ -237,8 +238,9 @@ class SearchView: UIViewController, UITableViewDataSource, UITableViewDelegate {
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if indexPath.row < 1 {
+        if indexPath.row < 1 { // 도보 경로를 선택했을시
             let res = walks!.features.map { Walk(feature: $0) }
+            // 로그 확인용 메소드 - 후에 주석처리?
             print("걷기")
             for geometry in res {
                 if let dots = geometry.feature.geometry.coordinates {
@@ -250,10 +252,11 @@ class SearchView: UIViewController, UITableViewDataSource, UITableViewDelegate {
                     }
                 }
             }
-            close()
-        } else {
-            let selectedRoute = routes[indexPath.row - 1]
+            close() // 선택시 모달창 닫기 + 데이터 부모뷰에 전송
+        } else { // 대중교통 경로중 하나를 선택했을시
+            let selectedRoute = routes[indexPath.row - 1] // 최상단에 도보 선택지가 있으므로 indexPath.row - 1
             selectedData = selectedRoute // 자료형의 변경
+            // 로그 확인용 메소드 - 후에 주석처리?
             for leg in selectedRoute.itinerary.legs {
                 if let steps = leg.steps {
                     for step in steps {
@@ -274,7 +277,7 @@ class SearchView: UIViewController, UITableViewDataSource, UITableViewDelegate {
                         print(stationName)
                     }
                 }
-                close() // 선택시 모달창 닫기
+                close() // 선택시 모달창 닫기 + 데이터를 부모뷰에 전송
             }// 선택된 경로를 지도에 표시
         }
     }
@@ -291,10 +294,10 @@ class SearchView: UIViewController, UITableViewDataSource, UITableViewDelegate {
 
     func close() { // 검색완료 이후 창이 닫히면서 실행되는 메소드
         print("보내질 예정 선택된 경로 데이터: \(String(describing: selectedData))") // 로그 확인용 - 후에 주석처리?
-        onTransitDataUpdate?(selectedData ?? nil)
-        onWalkDataUpdate?(walks ?? nil)
+        onTransitDataUpdate?(selectedData ?? nil) // 대중교통 데이터
+        onWalkDataUpdate?(walks ?? nil) // 도보이동 데이터
         updateData() // isDataUpdated = true 로 변경
-        dismiss(animated: true)
+        dismiss(animated: true) // 모달창 닫기
     }
 
     func updateData() { // 데이터 변경여부
