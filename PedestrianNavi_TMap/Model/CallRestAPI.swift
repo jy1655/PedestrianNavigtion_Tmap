@@ -94,9 +94,9 @@ struct CallRestAPI { // 보행자 네비게이션과 대중교통 네비게이�
         ]
 
         guard let httpBody = try? JSONSerialization.data(withJSONObject: parametersT, options: []) else {
-                completion(.failure(NSError(domain: "InvalidParameters", code: 0, userInfo: nil)))
-                return
-            }
+            completion(.failure(NSError(domain: "InvalidParameters", code: 0, userInfo: nil)))
+            return
+        }
 
 //        request.httpBody = parametersT.percentEncoded()
         request.httpBody = httpBody
@@ -145,9 +145,9 @@ struct CallRestAPI { // 보행자 네비게이션과 대중교통 네비게이�
         ]
 
         guard let httpBody = try? JSONSerialization.data(withJSONObject: parametersT, options: []) else {
-                completion(.failure(NSError(domain: "InvalidParameters", code: 0, userInfo: nil)))
-                return
-            }
+            completion(.failure(NSError(domain: "InvalidParameters", code: 0, userInfo: nil)))
+            return
+        }
 
 //        request.httpBody = parametersT.percentEncoded()
         request.httpBody = httpBody

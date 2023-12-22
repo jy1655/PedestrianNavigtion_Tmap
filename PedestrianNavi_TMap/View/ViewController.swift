@@ -78,10 +78,10 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
         }
     }
 
-    @objc func requestRoute() {
+    @objc func requestRoute() { // 도보이동 경로 불러오기
 
         clearMarkers()
-        clearPolylines()
+        clearPolylines() // 예전에 있던 경로정보, 마커 삭제
 
         addressTextField.resignFirstResponder() // 키보드가 보이는 경우 숨깁니다
 
@@ -192,14 +192,14 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
     func setUpUI() {
 
         // 검색 버튼 설정
-        searchButton = setButton(title: "검색", selector: #selector(searchLocationModal))
+        searchButton = setButton(title: "경로 찾기", selector: #selector(searchLocationModal))
         self.view.addSubview(searchButton)
 
         // 메뉴 버튼 설정
         menuButton = setButton(title: "Menu", selector: #selector(presentSideMenu))
         self.view.addSubview(menuButton)
         // 경로 탐색  버튼 설정
-        routeButton = setButton(title: "경로 탐색", selector: #selector(requestRoute))
+        routeButton = setButton(title: "미완성 버튼 - 아직 존폐여부 미결정", selector: #selector(requestRoute))
         view.addSubview(routeButton)
 //        self.view.addSubview(routeButton)
 
@@ -279,7 +279,10 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
                 self.polylines.append(polyline)
             }
             mapView.trackingMode = .followWithHeading // 트래킹 모드 활성화
+        } else { // 대중교통 경로가 들어온게 없다면 도보이동을 선택했을 것이다.
+            requestRoute()
         } // 선택했던 경로를 지도에 표시(polyline)
+
     } // 모달창이 경로를 선택하면서 닫힐떄 호출되는 메소드
 
     func takeData(_ transitData: [Route], _ walkData: PedestrianData?) {
@@ -738,12 +741,12 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
         // api
         //            self.leftArray?.append(LeftMenuData(title: "자동완성", onClick: objFunc51))
         //            self.leftArray?.append(LeftMenuData(title: "BizCategory", onClick: objFunc52))
-        menuTableVC.menuItems.append(LeftMenuData(title: "POI 검색", onClick: {[weak self] in self?.objFunc53()}))
-        menuTableVC.menuItems.append(LeftMenuData(title: "POI 주변검색", onClick: {[weak self] in self?.objFunc54()}))
-        menuTableVC.menuItems.append(LeftMenuData(title: "리버스 지오코딩", onClick: {[weak self] in self?.objFunc56()}))
-        menuTableVC.menuItems.append(LeftMenuData(title: "경로탐색", onClick: {[weak self] in self?.objFunc57()}))
+        menuTableVC.menuItems.append(LeftMenuData(title: "POI 검색", onClick: {[weak self] in self?.objFunc53()})) // 현재 검색단어 입력할 텍스트창 없음
+        menuTableVC.menuItems.append(LeftMenuData(title: "POI 주변검색", onClick: {[weak self] in self?.objFunc54()})) // 현재 검색단어 입력할 텍스트창 없음
+        menuTableVC.menuItems.append(LeftMenuData(title: "리버스 지오코딩 ", onClick: {[weak self] in self?.objFunc56()})) // 현재 검색단어 입력할 텍스트창 없음
+        menuTableVC.menuItems.append(LeftMenuData(title: "도보로 재탐색", onClick: {[weak self] in self?.objFunc57()}))
         //            self.leftArray?.append(LeftMenuData(title: "타임머신", onClick: objFunc59))
-        menuTableVC.menuItems.append(LeftMenuData(title: "경유지 최적화", onClick: {[weak self] in self?.objFunc60()}))
+        menuTableVC.menuItems.append(LeftMenuData(title: "경유지 최적화", onClick: {[weak self] in self?.objFunc60()})) // 하드코딩- 여러경로 검색이 가능하다는거 확인용 메소드
         print("메뉴 항목 수: \(menuTableVC.menuItems.count)")
 
         menuTableVC.tableView.reloadData()
