@@ -86,4 +86,5 @@ class MarkerUIView: UIView {
         delegate?.searchLocationModal() // 모달 열기
     }
 
+
 }
