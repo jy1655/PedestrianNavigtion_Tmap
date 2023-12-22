@@ -8,7 +8,7 @@
 import Foundation
 
 
-struct CallRestAPI {
+struct CallRestAPI { // 보행자 네비게이션과 대중교통 네비게이션
 
     let startX: String
     let startY: String
@@ -18,7 +18,7 @@ struct CallRestAPI {
 //    let timemachine: String
     let callAppKey = CallAppKey()
 
-        // API 호출 메소드
+        // 보행자 API 호출 메소드
     func fetchRoute(completion: @escaping (Result<Data, Error>) -> Void) {
         let urlString = "https://apis.openapi.sk.com/tmap/routes/pedestrian?version=1&format=json&callback=result" // 보행자 경로요청 API URL
 
@@ -65,6 +65,8 @@ struct CallRestAPI {
         task.resume()
     }
 
+
+    // 대중교통 API
     func transitRoute(completion: @escaping (Result<Data, Error>) -> Void) {
         let urlStringT = "https://apis.openapi.sk.com/transit/routes" // 대중교통 경로요청 API URL
 
@@ -92,9 +94,9 @@ struct CallRestAPI {
         ]
 
         guard let httpBody = try? JSONSerialization.data(withJSONObject: parametersT, options: []) else {
-                completion(.failure(NSError(domain: "InvalidParameters", code: 0, userInfo: nil)))
-                return
-            }
+            completion(.failure(NSError(domain: "InvalidParameters", code: 0, userInfo: nil)))
+            return
+        }
 
 //        request.httpBody = parametersT.percentEncoded()
         request.httpBody = httpBody
@@ -115,7 +117,7 @@ struct CallRestAPI {
         task.resume()
     }
 
-    func transitSubRoute(completion: @escaping (Result<Data, Error>) -> Void) {
+    func transitSubRoute(completion: @escaping (Result<Data, Error>) -> Void) { // transit중에서 간략한 정보만 보내주는 API
         let urlStringTS = "https://apis.openapi.sk.com/transit/routes/sub" // 대중교통 경로요청 API URL
 
         guard let url = URL(string: urlStringTS) else {
@@ -143,9 +145,9 @@ struct CallRestAPI {
         ]
 
         guard let httpBody = try? JSONSerialization.data(withJSONObject: parametersT, options: []) else {
-                completion(.failure(NSError(domain: "InvalidParameters", code: 0, userInfo: nil)))
-                return
-            }
+            completion(.failure(NSError(domain: "InvalidParameters", code: 0, userInfo: nil)))
+            return
+        }
 
 //        request.httpBody = parametersT.percentEncoded()
         request.httpBody = httpBody

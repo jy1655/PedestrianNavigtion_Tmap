@@ -11,6 +11,7 @@ import CoreLocation
 struct MakingUI {
 
     static func colorWithHexString(hexString: String) -> UIColor { // 16진수 색상 코드를 UIColor로 변환하는 함수
+        // 대중교통 API에 포함된 경로 색상 구현용
         var cString: String = hexString.trimmingCharacters(in: .whitespacesAndNewlines).uppercased()
 
         if cString.hasPrefix("#") {
@@ -147,15 +148,20 @@ extension UIViewController {
             } // 크기를 원래대로 되돌리는 메서드
         } // 버튼에서 손을 떼었을 때 호출되는 메서드
 
-    func setAlert(title: String, message: String, actions: [UIAlertAction], on viewController: UIViewController) { // 알람기능 만들어두기
+    func setAlert(title: String, message: String, actions: [UIAlertAction]?, on viewController: UIViewController) { // 알람기능 만들어두기
         print("버튼생성 : \(title)")
         let alert = UIAlertController(
             title: title,
             message: message,
             preferredStyle: UIAlertController.Style.alert
         )
-        for action in actions {
-            alert.addAction(action)
+        if actions != nil {
+            for action in actions! {
+                alert.addAction(action)
+            }
+        } else {
+            // actions가 nil일 때 기본 "확인" 버튼 추가
+            alert.addAction(UIAlertAction(title: "확인", style: .default, handler: nil))
         }
         viewController.present(alert, animated: true)
     }

@@ -7,6 +7,9 @@
 
 import Foundation
 
+
+/** 대중교통 API 로 불러왔을때의 Json 데이터 셋 **/
+
 struct Route {
     // 'Plan' 구조체의 데이터를 저장할 속성들을 여기에 정의합니다.
     // 예시로, 'Itinerary' 객체들의 배열을 저장할 수 있습니다.
@@ -123,3 +126,7 @@ struct Lane: Codable {
     let routeID: String?
     let service: Int
 }
+
+
+/** transit *Sub* Api 로 불러왔을때의 데이터 셋 **/
+
