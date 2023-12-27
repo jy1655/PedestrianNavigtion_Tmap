@@ -31,7 +31,7 @@ class MarkerUIView: UIView {
         labelField.textAlignment = .center
         labelField.lineBreakMode = .byWordWrapping // 글자가 화면을 넘어가면 줄바꿈
         labelField.numberOfLines = 0 // 무제한
-        self.addSubview(labelField)
+        self.addSubview(labelField) 
 
         // 버튼 추가 및 구성
         deleteButton.frame = CGRect(x: 20, y: 470, width: 100, height: 30) // 적절한 위치 및 크기 설정
@@ -41,7 +41,7 @@ class MarkerUIView: UIView {
         self.addSubview(deleteButton)
 
         viewDownButton.frame = CGRect(x: 0, y: 0 , width: 15, height: 15) // 적절한 위치 및 크기 설정
-        viewDownButton.setTitle("X", for: .normal)
+        viewDownButton.setTitle("X", for: .normal) // 창 없에는 버튼을 임시?로 만듬 더 좋은방식으로 만들수 있다면 수정예정
         viewDownButton.backgroundColor = .black
         viewDownButton.addTarget(self, action: #selector(shutdownView), for: .touchUpInside)
         self.addSubview(viewDownButton)

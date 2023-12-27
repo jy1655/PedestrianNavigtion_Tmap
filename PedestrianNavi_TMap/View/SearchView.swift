@@ -148,7 +148,7 @@ class SearchView: UIViewController, UITableViewDataSource, UITableViewDelegate {
                 // 성공적으로 데이터를 받았을 때의 처리
                 print(walkData)
                 self.walks = walkData
-                //                self.delegate?.takeData(data: self.walks) // ViewController의 modalData에 정보 저장
+                // self.delegate?.takeData(data: self.walks) // ViewController의 modalData에 정보 저장
                 dispatchGroup.leave()
             case .failure(let error):
                 // 오류가 발생했을 때의 처리

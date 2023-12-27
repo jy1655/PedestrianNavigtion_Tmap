@@ -1,0 +1,501 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		161BD4E82B144D73003CBB08 /* PedestrianDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 161BD4E72B144D73003CBB08 /* PedestrianDataModel.swift */; };
+		168950DE2AFDF8DC0043CFAB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168950DD2AFDF8DC0043CFAB /* AppDelegate.swift */; };
+		168950E02AFDF8DC0043CFAB /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168950DF2AFDF8DC0043CFAB /* SceneDelegate.swift */; };
+		168950E22AFDF8DC0043CFAB /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168950E12AFDF8DC0043CFAB /* ViewController.swift */; };
+		168950E72AFDF8DD0043CFAB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 168950E62AFDF8DD0043CFAB /* Assets.xcassets */; };
+		168950EA2AFDF8DD0043CFAB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 168950E82AFDF8DD0043CFAB /* LaunchScreen.storyboard */; };
+		168950F42AFDF9060043CFAB /* TMapSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 168950F22AFDF9030043CFAB /* TMapSDK.framework */; };
+		168950F52AFDF9060043CFAB /* TMapSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 168950F22AFDF9030043CFAB /* TMapSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		168950FA2AFDF9690043CFAB /* Config.plist in Resources */ = {isa = PBXBuildFile; fileRef = 168950F72AFDF9690043CFAB /* Config.plist */; };
+		168950FB2AFDF9690043CFAB /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 168950F82AFDF9690043CFAB /* README.md */; };
+		168950FC2AFDF9690043CFAB /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = 168950F92AFDF9690043CFAB /* .gitignore */; };
+		168950FF2AFDF9DC0043CFAB /* CallRestAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168950FE2AFDF9DC0043CFAB /* CallRestAPI.swift */; };
+		168951012AFDF9FB0043CFAB /* CallAppKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168951002AFDF9FB0043CFAB /* CallAppKey.swift */; };
+		168951032AFDFA010043CFAB /* IMU.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168951022AFDFA010043CFAB /* IMU.swift */; };
+		168951062AFDFA0F0043CFAB /* SideMenu in Frameworks */ = {isa = PBXBuildFile; productRef = 168951052AFDFA0F0043CFAB /* SideMenu */; };
+		168951082AFDFA290043CFAB /* MenuTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168951072AFDFA290043CFAB /* MenuTableViewController.swift */; };
+		168E6A832B0DE06D00E120D0 /* MarkerUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168E6A822B0DE06D00E120D0 /* MarkerUIView.swift */; };
+		16F020E52B03031B00E46959 /* transit.json in Resources */ = {isa = PBXBuildFile; fileRef = 16F020E42B03031B00E46959 /* transit.json */; };
+		16F020E72B03098000E46959 /* SearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F020E62B03098000E46959 /* SearchView.swift */; };
+		16F020EB2B04804700E46959 /* TransitDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F020EA2B04804700E46959 /* TransitDataModel.swift */; };
+		16F020ED2B04C2D600E46959 /* 11 in Resources */ = {isa = PBXBuildFile; fileRef = 16F020EC2B04C2D600E46959 /* 11 */; };
+		16F020EF2B05D72500E46959 /* MakingUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F020EE2B05D72500E46959 /* MakingUI.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		168950F62AFDF9060043CFAB /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				168950F52AFDF9060043CFAB /* TMapSDK.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		161BD4E72B144D73003CBB08 /* PedestrianDataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PedestrianDataModel.swift; sourceTree = "<group>"; };
+		168950DA2AFDF8DC0043CFAB /* PedestrianNavi_TMap.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PedestrianNavi_TMap.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		168950DD2AFDF8DC0043CFAB /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		168950DF2AFDF8DC0043CFAB /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
+		168950E12AFDF8DC0043CFAB /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		168950E62AFDF8DD0043CFAB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		168950E92AFDF8DD0043CFAB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		168950EB2AFDF8DD0043CFAB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		168950F22AFDF9030043CFAB /* TMapSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = TMapSDK.framework; sourceTree = "<group>"; };
+		168950F72AFDF9690043CFAB /* Config.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Config.plist; sourceTree = "<group>"; };
+		168950F82AFDF9690043CFAB /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		168950F92AFDF9690043CFAB /* .gitignore */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
+		168950FE2AFDF9DC0043CFAB /* CallRestAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CallRestAPI.swift; sourceTree = "<group>"; };
+		168951002AFDF9FB0043CFAB /* CallAppKey.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CallAppKey.swift; sourceTree = "<group>"; };
+		168951022AFDFA010043CFAB /* IMU.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMU.swift; sourceTree = "<group>"; };
+		168951072AFDFA290043CFAB /* MenuTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuTableViewController.swift; sourceTree = "<group>"; };
+		168E6A822B0DE06D00E120D0 /* MarkerUIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkerUIView.swift; sourceTree = "<group>"; };
+		16F020E42B03031B00E46959 /* transit.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = transit.json; sourceTree = "<group>"; };
+		16F020E62B03098000E46959 /* SearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchView.swift; sourceTree = "<group>"; };
+		16F020EA2B04804700E46959 /* TransitDataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransitDataModel.swift; sourceTree = "<group>"; };
+		16F020EC2B04C2D600E46959 /* 11 */ = {isa = PBXFileReference; lastKnownFileType = text; path = 11; sourceTree = "<group>"; };
+		16F020EE2B05D72500E46959 /* MakingUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MakingUI.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		168950D72AFDF8DC0043CFAB /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				168951062AFDFA0F0043CFAB /* SideMenu in Frameworks */,
+				168950F42AFDF9060043CFAB /* TMapSDK.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		168950D12AFDF8DC0043CFAB = {
+			isa = PBXGroup;
+			children = (
+				16F020EC2B04C2D600E46959 /* 11 */,
+				16F020E42B03031B00E46959 /* transit.json */,
+				168950DC2AFDF8DC0043CFAB /* PedestrianNavi_TMap */,
+				168950F12AFDF8EF0043CFAB /* Frameworks */,
+				168950F92AFDF9690043CFAB /* .gitignore */,
+				168950F72AFDF9690043CFAB /* Config.plist */,
+				168950F82AFDF9690043CFAB /* README.md */,
+				168950DB2AFDF8DC0043CFAB /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		168950DB2AFDF8DC0043CFAB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				168950DA2AFDF8DC0043CFAB /* PedestrianNavi_TMap.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		168950DC2AFDF8DC0043CFAB /* PedestrianNavi_TMap */ = {
+			isa = PBXGroup;
+			children = (
+				168950FD2AFDF9AD0043CFAB /* Delegate */,
+				168951092AFDFCC60043CFAB /* View */,
+				1689510A2AFDFCDA0043CFAB /* Model */,
+				168950E62AFDF8DD0043CFAB /* Assets.xcassets */,
+				168950E82AFDF8DD0043CFAB /* LaunchScreen.storyboard */,
+				168950EB2AFDF8DD0043CFAB /* Info.plist */,
+			);
+			path = PedestrianNavi_TMap;
+			sourceTree = "<group>";
+		};
+		168950F12AFDF8EF0043CFAB /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				168950F22AFDF9030043CFAB /* TMapSDK.framework */,
+			);
+			path = Frameworks;
+			sourceTree = "<group>";
+		};
+		168950FD2AFDF9AD0043CFAB /* Delegate */ = {
+			isa = PBXGroup;
+			children = (
+				168950DD2AFDF8DC0043CFAB /* AppDelegate.swift */,
+				168950DF2AFDF8DC0043CFAB /* SceneDelegate.swift */,
+			);
+			path = Delegate;
+			sourceTree = "<group>";
+		};
+		168951092AFDFCC60043CFAB /* View */ = {
+			isa = PBXGroup;
+			children = (
+				168950E12AFDF8DC0043CFAB /* ViewController.swift */,
+				168951072AFDFA290043CFAB /* MenuTableViewController.swift */,
+				16F020E62B03098000E46959 /* SearchView.swift */,
+				168E6A822B0DE06D00E120D0 /* MarkerUIView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		1689510A2AFDFCDA0043CFAB /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				168950FE2AFDF9DC0043CFAB /* CallRestAPI.swift */,
+				168951002AFDF9FB0043CFAB /* CallAppKey.swift */,
+				168951022AFDFA010043CFAB /* IMU.swift */,
+				16F020EE2B05D72500E46959 /* MakingUI.swift */,
+				16F020EA2B04804700E46959 /* TransitDataModel.swift */,
+				161BD4E72B144D73003CBB08 /* PedestrianDataModel.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		168950D92AFDF8DC0043CFAB /* PedestrianNavi_TMap */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 168950EE2AFDF8DD0043CFAB /* Build configuration list for PBXNativeTarget "PedestrianNavi_TMap" */;
+			buildPhases = (
+				168950D62AFDF8DC0043CFAB /* Sources */,
+				168950D72AFDF8DC0043CFAB /* Frameworks */,
+				168950D82AFDF8DC0043CFAB /* Resources */,
+				168950F62AFDF9060043CFAB /* Embed Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = PedestrianNavi_TMap;
+			packageProductDependencies = (
+				168951052AFDFA0F0043CFAB /* SideMenu */,
+			);
+			productName = PedestrianNavi_TMap;
+			productReference = 168950DA2AFDF8DC0043CFAB /* PedestrianNavi_TMap.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		168950D22AFDF8DC0043CFAB /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1500;
+				LastUpgradeCheck = 1500;
+				TargetAttributes = {
+					168950D92AFDF8DC0043CFAB = {
+						CreatedOnToolsVersion = 15.0.1;
+					};
+				};
+			};
+			buildConfigurationList = 168950D52AFDF8DC0043CFAB /* Build configuration list for PBXProject "PedestrianNavi_TMap" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 168950D12AFDF8DC0043CFAB;
+			packageReferences = (
+				168951042AFDFA0F0043CFAB /* XCRemoteSwiftPackageReference "SideMenu" */,
+			);
+			productRefGroup = 168950DB2AFDF8DC0043CFAB /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				168950D92AFDF8DC0043CFAB /* PedestrianNavi_TMap */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		168950D82AFDF8DC0043CFAB /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				168950FC2AFDF9690043CFAB /* .gitignore in Resources */,
+				16F020E52B03031B00E46959 /* transit.json in Resources */,
+				168950EA2AFDF8DD0043CFAB /* LaunchScreen.storyboard in Resources */,
+				168950FA2AFDF9690043CFAB /* Config.plist in Resources */,
+				168950FB2AFDF9690043CFAB /* README.md in Resources */,
+				16F020ED2B04C2D600E46959 /* 11 in Resources */,
+				168950E72AFDF8DD0043CFAB /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		168950D62AFDF8DC0043CFAB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				168950FF2AFDF9DC0043CFAB /* CallRestAPI.swift in Sources */,
+				168951082AFDFA290043CFAB /* MenuTableViewController.swift in Sources */,
+				16F020EF2B05D72500E46959 /* MakingUI.swift in Sources */,
+				168951032AFDFA010043CFAB /* IMU.swift in Sources */,
+				16F020EB2B04804700E46959 /* TransitDataModel.swift in Sources */,
+				168E6A832B0DE06D00E120D0 /* MarkerUIView.swift in Sources */,
+				168950E22AFDF8DC0043CFAB /* ViewController.swift in Sources */,
+				16F020E72B03098000E46959 /* SearchView.swift in Sources */,
+				168950DE2AFDF8DC0043CFAB /* AppDelegate.swift in Sources */,
+				168951012AFDF9FB0043CFAB /* CallAppKey.swift in Sources */,
+				161BD4E82B144D73003CBB08 /* PedestrianDataModel.swift in Sources */,
+				168950E02AFDF8DC0043CFAB /* SceneDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		168950E82AFDF8DD0043CFAB /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				168950E92AFDF8DD0043CFAB /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		168950EC2AFDF8DD0043CFAB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		168950ED2AFDF8DD0043CFAB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		168950EF2AFDF8DD0043CFAB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = F6YW6L8F8N;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Frameworks",
+				);
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = PedestrianNavi_TMap/Info.plist;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "study.PedestrianNavi-TMap";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		168950F02AFDF8DD0043CFAB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = F6YW6L8F8N;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Frameworks",
+				);
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = PedestrianNavi_TMap/Info.plist;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "study.PedestrianNavi-TMap";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		168950D52AFDF8DC0043CFAB /* Build configuration list for PBXProject "PedestrianNavi_TMap" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				168950EC2AFDF8DD0043CFAB /* Debug */,
+				168950ED2AFDF8DD0043CFAB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		168950EE2AFDF8DD0043CFAB /* Build configuration list for PBXNativeTarget "PedestrianNavi_TMap" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				168950EF2AFDF8DD0043CFAB /* Debug */,
+				168950F02AFDF8DD0043CFAB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		168951042AFDFA0F0043CFAB /* XCRemoteSwiftPackageReference "SideMenu" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/jonkykong/SideMenu.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 6.5.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		168951052AFDFA0F0043CFAB /* SideMenu */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 168951042AFDFA0F0043CFAB /* XCRemoteSwiftPackageReference "SideMenu" */;
+			productName = SideMenu;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = 168950D22AFDF8DC0043CFAB /* Project object */;
+}

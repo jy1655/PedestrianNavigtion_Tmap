@@ -1,3 +1,5 @@
+// 도보 데이터 텍스트 파일로 임시저장 = 참고자료용
+
 {
   "type" : "FeatureCollection",
   "features" : [

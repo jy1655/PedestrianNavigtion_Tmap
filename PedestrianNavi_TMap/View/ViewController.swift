@@ -199,7 +199,7 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
         menuButton = setButton(title: "Menu", selector: #selector(presentSideMenu))
         self.view.addSubview(menuButton)
         // 경로 탐색  버튼 설정
-        routeButton = setButton(title: "미완성 버튼 - 아직 존폐여부 미결정", selector: #selector(requestRoute))
+        routeButton = setButton(title: "미완성 버튼", selector: #selector(requestRoute)) // 현재는 도보API 불러오기로 되어 있으나 변경해야 할 것 같음
         view.addSubview(routeButton)
 //        self.view.addSubview(routeButton)
 
@@ -290,7 +290,7 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
         modalWalkData = walkData
     } // 모달에서 검색한 대중교통경로 정보(10개치) 저장
 
-    func createPolylines(from route: Route) -> [TMapPolyline] {
+    func createPolylines(from route: Route) -> [TMapPolyline] { // 경로표시
         var previousStepEndCoordinate: CLLocationCoordinate2D?
 
         for leg in route.itinerary.legs {
