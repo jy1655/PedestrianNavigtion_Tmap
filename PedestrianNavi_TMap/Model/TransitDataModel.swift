@@ -44,7 +44,7 @@ struct Leg: Codable {
     let distance: Int // 거리
     let start: Location
     let end: Location
-    let steps: [Step]? // 경로 정보롸 안내문
+    let steps: [Step]? // 경로 정보와 안내문
     let passStopList: PassStopList? //
     let routeId: String?
     let passShape: PassShape?

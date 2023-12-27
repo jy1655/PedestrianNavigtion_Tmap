@@ -4,7 +4,6 @@
 *.json
 *.lock
 *.xcuserstate
-*.pbxproj
 *.xcbkptlist
 
 
