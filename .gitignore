@@ -2,9 +2,7 @@
 
 *.DS_Store
 *.json
-*.lock
-*.xcuserstate
-*.xcbkptlist
+*.lock*.xcbkptlist
 
 #ff
 #의존성 파일들 디렉토리: pod install로 설치

@@ -56,7 +56,7 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
 
         setupMapView()
         setUpUI()
-//        imuCheck.startMotionUpdates() // 콘솔창이 너무 어지러워서 임시 차단
+        imuCheck.startMotionUpdates() // IMU기능을 활성화 - 배터리 소모가 굉장히 커질거라 예상
 
         setupSideMenu()
 
