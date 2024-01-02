@@ -47,6 +47,7 @@
 
 /* Begin PBXFileReference section */
 		161BD4E72B144D73003CBB08 /* PedestrianDataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PedestrianDataModel.swift; sourceTree = "<group>"; };
+		1638DBE42B439A8C00A125DA /* Docs.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = Docs.md; sourceTree = "<group>"; };
 		168950DA2AFDF8DC0043CFAB /* PedestrianNavi_TMap.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PedestrianNavi_TMap.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		168950DD2AFDF8DC0043CFAB /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		168950DF2AFDF8DC0043CFAB /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -86,6 +87,7 @@
 		168950D12AFDF8DC0043CFAB = {
 			isa = PBXGroup;
 			children = (
+				1638DBE42B439A8C00A125DA /* Docs.md */,
 				16F020EC2B04C2D600E46959 /* 11 */,
 				16F020E42B03031B00E46959 /* transit.json */,
 				168950DC2AFDF8DC0043CFAB /* PedestrianNavi_TMap */,

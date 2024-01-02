@@ -167,7 +167,6 @@ struct CallRestAPI { // 보행자 네비게이션과 대중교통 네비게이�
         }
         task.resume()
     }
-
 }
 
 extension Dictionary {
@@ -182,7 +181,7 @@ extension Dictionary {
     }
 }
 //
-//// 사용 예
+/// 사용 예
 //let routeRequest = CallRestAPI(
 //    startX: "126.983937",
 //    startY: "37.564991",
