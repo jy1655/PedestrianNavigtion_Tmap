@@ -711,7 +711,8 @@
 - Description
 
     도보이동 경로 불러오기. 미리 선언해둔 변수 `currentLocation`, `selectLocation`을 출발지와 목적지로 하고 `func pedestrianAPICall()` 로 불러온 경로 정보를 화면에 마커와 polyline으로 표시한다.
-    현재는 따로 parameter 없이 미리 지정된 변수들로 메소드가 실행되고 있으나 후에 필요 시 출발지와 목적지의 Parameter 추가 예정도 있음
+    현재는 따로 parameter 없이 미리 지정된 변수들로 메소드가 실행되고 있으나 후에 필요 시 출발지와 목적지의 Parameter 추가 예정도 있음.
+    
 
 
 
