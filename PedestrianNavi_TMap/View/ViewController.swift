@@ -477,8 +477,6 @@ class ViewController: UIViewController, TMapTapiDelegate, TMapViewDelegate, CLLo
     func mapView(_ mapView: TMapView, doubleTapOnMap position: CLLocationCoordinate2D) {
         print("지도 더블 탭")
 
-        _ = TMapMarker(position: position)
-
         setMarker(position: position)
     }
 
